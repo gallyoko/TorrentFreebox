@@ -1,0 +1,9 @@
+/.sourcemaps
+/.idea
+/keystore
+/node_modules
+/platforms
+/plugins
+/www
+/delivery
+/log
