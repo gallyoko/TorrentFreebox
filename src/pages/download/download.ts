@@ -24,7 +24,8 @@ export class DownloadPage {
     constructor(public navCtrl: NavController, private freeboxService: FreeboxService,
                 private commonService: CommonService, private actionsheetCtrl: ActionSheetController,
                 private alertCtrl: AlertController) {
-
+        this.noDownload = false;
+        this.noDownloadMessage = "";
     }
 
     ionViewDidEnter () {
@@ -67,7 +68,7 @@ export class DownloadPage {
                     this.noFullDownload = true;
                 }
                 const downloadFilter = (shareMode) => {
-                    return downloads.filter((download) =>
+                    return this.fullDownloads.filter((download) =>
                         download.shareStatus == shareMode
                     );
                 };

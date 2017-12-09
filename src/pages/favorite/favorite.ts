@@ -1,17 +1,13 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
-import { FreeboxService } from '../../providers/freebox-service';
-import { CommonService } from '../../providers/common-service';
 
 @Component({
   selector: 'page-favorite',
-  templateUrl: 'favorite.html',
-  providers: [FreeboxService, CommonService]
+  templateUrl: 'favorite.html'
 })
 export class FavoritePage {
 
-    constructor(public navCtrl: NavController, private freeboxService: FreeboxService,
-                private commonService: CommonService) {
+    constructor(public navCtrl: NavController) {
 
     }
 

@@ -16,11 +16,10 @@ export class FreeboxService {
     private routeLogin: any;
     private routeLoginSession: any;
     private routeDownloads: any;
-    private routeDownload: any;
+    //private routeDownload: any;
     private routeDownloadDelete: any;
     private routeDownloadStatus: any;
     private routeDownloadAddByUrl: any;
-    private routeAirMedia: any;
 
     constructor(public http: HttpClient, public commonService: CommonService) {
         //this.routeAuth = this.routeApi + 'login/authorize/';
@@ -32,12 +31,12 @@ export class FreeboxService {
         //this.routeLoginSession = this.routeApi + 'login/session';
         this.routeLoginSession = this.routeApi + 'freebox/login/session';
         this.routeDownloads = this.routeApi + 'freebox/downloads';
-        this.routeDownload = this.routeApi + 'freebox/download';
+        //this.routeDownload = this.routeApi + 'freebox/download';
         this.routeDownloadDelete = this.routeApi + 'freebox/download/delete';
         this.routeDownloadStatus = this.routeApi + 'freebox/download/status';
         this.routeDownloadAddByUrl = this.routeApi + 'freebox/download/add/url';
         //this.routeDownloads = this.routeApi + 'downloads/';
-        this.routeAirMedia = this.routeApi + 'airmedia/receivers/';
+        //this.routeAirMedia = this.routeApi + 'airmedia/receivers/';
     }
 
     auth() {
