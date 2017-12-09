@@ -258,6 +258,14 @@ export class FreeboxService {
                                         checkingStatus = true;
                                     } else if (entry['status']=='seeding') {
                                         shareStatus = true;
+                                        if (entry['tx_rate'] < 1000 ) {
+                                            speed = entry['tx_rate'] + ' o/s';
+                                        } else if (entry['tx_rate'] < 1000000 ) {
+                                            speed = Math.ceil(entry['tx_rate'] / 1000) + ' Ko/s';
+                                        } else {
+                                            speed = Math.ceil(entry['tx_rate'] / 1000000000) + ' Mo/s';
+                                        }
+                                        progress = Math.ceil((entry['tx_pct'] / 100));
                                     } else if (entry['status']=='starting') {
                                         downloadStatus = true;
                                     } else if (entry['status']=='stopping') {

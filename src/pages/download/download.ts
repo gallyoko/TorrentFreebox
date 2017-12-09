@@ -13,8 +13,10 @@ import { Observable } from 'rxjs/Observable';
 export class DownloadPage {
 
     private shareMode:boolean;
+    private fullDownloads:any = [];
     private downloads:any = [];
     private noDownload:boolean;
+    private noFullDownload:boolean;
     private noDownloadMessage:string;
     private subscriptionTimer:ISubscription;
     private firstLoad:boolean;
@@ -28,19 +30,27 @@ export class DownloadPage {
     ionViewDidEnter () {
         this.shareMode = false;
         this.downloads = [];
+        this.fullDownloads = [];
         this.noDownload = false;
+        this.noFullDownload = false;
         this.noDownloadMessage = "";
         this.firstLoad = true;
         this.commonService.getGranted().then(granted => {
             if (granted) {
                 this.commonService.loadingShow('Please wait...');
-                this.subscriptionTimer = Observable.interval(2000).subscribe(x => {
-                    if (!this.noDownload) {
+                this.subscriptionTimer = Observable.interval(2500).subscribe(x => {
+                    if (!this.noFullDownload) {
                         this.showDownloads();
                     }
                 });
             }
         });
+    }
+
+    onChangeMode() {
+        this.commonService.loadingShow('Please wait...');
+        this.firstLoad = true;
+        this.downloads = [];
     }
 
     ionViewDidLeave () {
@@ -50,6 +60,12 @@ export class DownloadPage {
     showDownloads() {
         this.freeboxService.getDownloads().then(downloads => {
             if (downloads) {
+                this.fullDownloads = downloads;
+                if (this.fullDownloads.length > 0) {
+                    this.noFullDownload = false;
+                } else {
+                    this.noFullDownload = true;
+                }
                 const downloadFilter = (shareMode) => {
                     return downloads.filter((download) =>
                         download.shareStatus == shareMode
