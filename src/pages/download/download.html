@@ -1,0 +1,46 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Téléchargements</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding class="download-content">
+  <ion-list class="download-list">
+    <ion-item *ngFor="let download of downloads" (click)="openMenu(download)">
+      <ion-grid text-nowrap>
+        <ion-row>
+          <ion-col col-1 class="item-icon">
+            <ion-icon name="{{download.icon}}"></ion-icon>
+          </ion-col>
+          <ion-col col-11>
+            <ion-row>
+              <ion-col col-12>
+                {{download.title}}
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col col-5>
+                <h3>{{download.sizeMo}}</h3>
+              </ion-col>
+              <ion-col col-3>
+                <h3><ion-icon name="timer"></ion-icon> {{download.remainingTime}}</h3>
+              </ion-col>
+              <ion-col col-4>
+                <h3><ion-icon name="speedometer"></ion-icon> {{download.speed}}</h3>
+              </ion-col>
+            </ion-row>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col col-1></ion-col>
+          <ion-col col-11 class="item-progressbar">
+            <progress-bar [progress]="download.progress"></progress-bar>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+    <ion-item *ngIf="noDownload" class="download-no-item">
+      Aucun téléchargement en cours.
+    </ion-item>
+  </ion-list>
+</ion-content>

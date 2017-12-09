@@ -1,0 +1,42 @@
+current_path=`pwd`
+path_commands="`dirname \"$0\"`"
+path_commands="`( cd \"$path_commands\" && pwd )`"
+if [ -z "$path_commands" ] ; then
+    echo "Error"
+    exit 1  # fail
+else
+    rm -f ${path_commands}/../log/build.log
+
+    cd ${path_commands}/../
+
+    if [ ! -e "delivery/keystore/TorrentFreebox.keystore" ]
+    then
+        rm -Rf delivery
+        mkdir -p delivery/keystore
+        cd delivery/keystore
+        keytool -genkey -v -keystore TorrentFreebox.keystore -alias alias_name -keyalg RSA -keysize 2048 -validity 10000
+    fi
+
+    cd ${path_commands}/../
+
+    if [ ! -d platforms/android ]
+    then
+        ionic cordova platform add android >> log/build.log
+    fi
+
+    ionic cordova build android --release >> log/build.log
+
+    cd ${path_commands}/../platforms/android/build/outputs/apk/release
+
+    jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore ${path_commands}/../delivery/keystore/TorrentFreebox.keystore android-release-unsigned.apk alias_name >> ${path_commands}/../log/build.log
+
+    if [ -f ${path_commands}/../delivery/TorrentFreebox.apk ]
+    then
+        date=`date '+%Y-%m-%d_%H%M%S'`
+        mv -f ${path_commands}/../delivery/TorrentFreebox.apk ${path_commands}/../delivery/TorrentFreebox_${date}.apk
+    fi
+
+    mv -f ${path_commands}/../platforms/android/build/outputs/apk/release/android-release-unsigned.apk ${path_commands}/../delivery/TorrentFreebox.apk
+fi
+
+cd $current_path

@@ -1,0 +1,35 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Authentification Freebox
+    </ion-title>
+    <ion-buttons start>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-grid>
+    <ion-row>
+      <ion-col col-12>
+        L'application n'est pas authentifiée sur votre Freebox.
+        Pour ce faire, veuillez cliquer sur le bouton ci-dessous et valider la demande sur l'écran LCD de votre Freebox en touchant la flêche droite.
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col col-2></ion-col>
+      <ion-col col-8>
+        <button ion-button (click)="authentification()">
+          demander l'authentification
+        </button>
+      </ion-col>
+      <ion-col col-2></ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col col-12>
+        {{ authMessage }}
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>

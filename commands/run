@@ -1,0 +1,15 @@
+current_path=`pwd`
+exec_path="`dirname \"$0\"`"
+exec_path="`( cd \"$exec_path\" && pwd )`"
+if [ -z "$exec_path" ] ; then
+    echo "Error"
+    exit 1  # fail
+else
+    echo "Application launched, please waiting 15-20s"
+    echo ""
+    echo "Ctrl+C to cancel"
+    cd $exec_path/../
+    ionic serve >> log/serve.log
+fi
+
+cd $current_path

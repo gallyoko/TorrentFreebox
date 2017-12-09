@@ -1,0 +1,16 @@
+current_path=`pwd`
+exec_path="`dirname \"$0\"`"
+exec_path="`( cd \"$exec_path\" && pwd )`"
+if [ -z "$exec_path" ] ; then
+    echo "Error"
+    exit 1  # fail
+else
+    echo "Please waiting during installation..."
+    echo ""
+    cd $exec_path/../
+    npm install -y >> log/install.log
+    echo ""
+    echo "Finished"
+fi
+
+cd $current_path

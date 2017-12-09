@@ -1,0 +1,19 @@
+current_path=`pwd`
+path_commands="`dirname \"$0\"`"
+path_commands="`( cd \"$path_commands\" && pwd )`"
+if [ -z "$path_commands" ] ; then
+    echo "Error"
+    exit 1  # fail
+else
+    cd $path_commands/../
+    if [ "${1}" == "android" ] || [ "${1}" == "ios" ]
+    then
+        echo "${1} emulation launched... please waiting"
+        echo ""
+        ionic cordova emulate ${1} >> log/emulate.log
+    else
+        echo "usage : emulate android|ios"
+    fi
+fi
+
+cd $current_path
