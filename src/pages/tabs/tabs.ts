@@ -3,7 +3,7 @@ import { NavController } from 'ionic-angular';
 import { CommonService } from '../../providers/common-service';
 import { ConfigPage } from '../config/config';
 
-import { SharePage } from '../share/share';
+import { FavoritePage } from '../favorite/favorite';
 import { SearchPage } from '../search/search';
 import { DownloadPage } from '../download/download';
 
@@ -14,7 +14,7 @@ import { DownloadPage } from '../download/download';
 export class TabsPage {
 
     tab1Root = DownloadPage;
-    tab2Root = SharePage;
+    tab2Root = FavoritePage;
     tab3Root = SearchPage;
 
     constructor(public navCtrl: NavController, private commonService: CommonService) {

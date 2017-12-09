@@ -12,8 +12,10 @@ import { Observable } from 'rxjs/Observable';
 })
 export class DownloadPage {
 
+    private shareMode:boolean;
     private downloads:any = [];
     private noDownload:boolean;
+    private noDownloadMessage:string;
     private subscriptionTimer:ISubscription;
     private firstLoad:boolean;
 
@@ -24,13 +26,15 @@ export class DownloadPage {
     }
 
     ionViewDidEnter () {
+        this.shareMode = false;
         this.downloads = [];
         this.noDownload = false;
+        this.noDownloadMessage = "";
         this.firstLoad = true;
         this.commonService.getGranted().then(granted => {
             if (granted) {
                 this.commonService.loadingShow('Please wait...');
-                this.subscriptionTimer = Observable.interval(3000).subscribe(x => {
+                this.subscriptionTimer = Observable.interval(2000).subscribe(x => {
                     if (!this.noDownload) {
                         this.showDownloads();
                     }
@@ -46,10 +50,20 @@ export class DownloadPage {
     showDownloads() {
         this.freeboxService.getDownloads().then(downloads => {
             if (downloads) {
-                this.downloads = downloads;
+                const downloadFilter = (shareMode) => {
+                    return downloads.filter((download) =>
+                        download.shareStatus == shareMode
+                    );
+                };
+                this.downloads = downloadFilter(this.shareMode);
                 if (this.downloads.length > 0) {
                     this.noDownload = false;
                 } else {
+                    if (this.shareMode) {
+                        this.noDownloadMessage = "Aucun partage en cours.";
+                    } else {
+                        this.noDownloadMessage = "Aucun téléchargement en cours.";
+                    }
                     this.noDownload = true;
                 }
             }

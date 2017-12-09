@@ -9,7 +9,7 @@ import { MyApp } from './app.component';
 import { ProgressBarComponent } from '../directives/progress-bar/progress-bar';
 
 import { ConfigPage } from '../pages/config/config';
-import { SharePage } from '../pages/share/share';
+import { FavoritePage } from '../pages/favorite/favorite';
 import { SearchPage } from '../pages/search/search';
 import { DownloadPage } from '../pages/download/download';
 import { TabsPage } from '../pages/tabs/tabs';
@@ -24,7 +24,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
       MyApp,
       ProgressBarComponent,
       ConfigPage,
-      SharePage,
+      FavoritePage,
       SearchPage,
       DownloadPage,
       TabsPage,
@@ -39,7 +39,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
   entryComponents: [
       MyApp,
       ConfigPage,
-      SharePage,
+      FavoritePage,
       SearchPage,
       DownloadPage,
       TabsPage

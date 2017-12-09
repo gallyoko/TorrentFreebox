@@ -227,13 +227,15 @@ export class FreeboxService {
                                 for (let entry of response['result']) {
                                     let size = (entry['size'] / 1000000) + " Mo";
                                     let progress:number = Math.ceil((entry['rx_pct'] / 100));
-                                    let icon: string = 'play';
-                                    if (entry['status']=='stopped') {
-                                        icon = 'pause';
-                                    }
                                     let remainingTime:any = '';
                                     let speed:any = '';
-                                    if (entry['status']!='stopped') {
+                                    let icon: string = 'play';
+                                    let downloadStatus: boolean = false;
+                                    let checkingStatus: boolean = false;
+                                    let shareStatus: boolean = false;
+                                    if (entry['status']=='downloading') {
+                                        downloadStatus = true;
+                                        icon = 'pause';
                                         if (entry['eta'] < 60 ) {
                                             remainingTime = entry['eta'] + ' sec';
                                         } else if (entry['eta'] < 3600 ) {
@@ -250,6 +252,18 @@ export class FreeboxService {
                                         } else {
                                             speed = Math.ceil(entry['rx_rate'] / 1000000000) + ' Mo/s';
                                         }
+                                    } else if (entry['status']=='stopped') {
+                                        downloadStatus = true;
+                                    } else if (entry['status']=='checking') {
+                                        checkingStatus = true;
+                                    } else if (entry['status']=='seeding') {
+                                        shareStatus = true;
+                                    } else if (entry['status']=='starting') {
+                                        downloadStatus = true;
+                                    } else if (entry['status']=='stopping') {
+                                        downloadStatus = true;
+                                    } else if (entry['status']=='queued') {
+                                        downloadStatus = true;
                                     }
                                     let download:any = new DownloadModel(
                                         entry['id'],
@@ -262,7 +276,10 @@ export class FreeboxService {
                                         entry['rx_bytes'],
                                         remainingTime,
                                         progress,
-                                        speed
+                                        speed,
+                                        checkingStatus,
+                                        downloadStatus,
+                                        shareStatus
                                     );
                                     downloads.push(download);
                                 }

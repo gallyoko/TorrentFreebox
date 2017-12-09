@@ -1,13 +1,18 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Téléchargements</ion-title>
+    <ion-title *ngIf="!shareMode">Téléchargements</ion-title>
+    <ion-title *ngIf="shareMode">Partage</ion-title>
+    <ion-buttons right>
+      <ion-toggle color="danger" [(ngModel)]="shareMode" primary></ion-toggle>
+    </ion-buttons>
+
   </ion-navbar>
 </ion-header>
 
-<ion-content padding class="download-content">
+<ion-content padding>
   <ion-list class="download-list">
     <ion-item *ngFor="let download of downloads" (click)="openMenu(download)">
-      <ion-grid text-nowrap>
+      <ion-grid>
         <ion-row>
           <ion-col col-1 class="item-icon">
             <ion-icon name="{{download.icon}}"></ion-icon>
@@ -33,14 +38,17 @@
         </ion-row>
         <ion-row>
           <ion-col col-1></ion-col>
-          <ion-col col-11 class="item-progressbar">
+          <ion-col col-11 class="item-progressbar" *ngIf="download.downloadStatus">
             <progress-bar [progress]="download.progress"></progress-bar>
+          </ion-col>
+          <ion-col col-11 *ngIf="download.checkingStatus">
+            vérification en cours...
           </ion-col>
         </ion-row>
       </ion-grid>
     </ion-item>
     <ion-item *ngIf="noDownload" class="download-no-item">
-      Aucun téléchargement en cours.
+      {{ noDownloadMessage }}
     </ion-item>
   </ion-list>
 </ion-content>
