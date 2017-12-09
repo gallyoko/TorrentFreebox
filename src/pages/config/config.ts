@@ -28,7 +28,7 @@ export class ConfigPage {
           this.commonService.loadingHide();
           if (auth) {
               this.commonService.loadingShow("Veuillez autoriser l'application depuis la Freebox");
-              this.subscriptionTimer = Observable.interval(1500).subscribe(x => {
+              this.subscriptionTimer = Observable.interval(2500).subscribe(x => {
                   this.checkStatus();
               });
           } else {
