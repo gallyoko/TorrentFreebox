@@ -5,13 +5,31 @@ if [ -z "$path_commands" ] ; then
     echo "Error"
     exit 1  # fail
 else
-    rm -f ${path_commands}/../log/build.log
+    date=`date '+%Y-%m-%d_%H%M%S'`
 
     cd ${path_commands}/../
 
+    if [ ! -d log ]
+    then
+        mkdir log
+    fi
+
+    if [ -f delivery/TorrentFreebox.apk ]
+    then
+        mv -f delivery/TorrentFreebox.apk delivery/${date}_TorrentFreebox.apk
+        if [ -e "log/build.log" ]
+        then
+            mv -f log/build.log log/${date}_build.log
+        fi
+    fi
+
+    if [ -e "log/build.log" ]
+    then
+        rm -f log/build.log
+    fi
+
     if [ ! -e "delivery/keystore/TorrentFreebox.keystore" ]
     then
-        rm -Rf delivery
         mkdir -p delivery/keystore
         cd delivery/keystore
         keytool -genkey -v -keystore TorrentFreebox.keystore -alias alias_name -keyalg RSA -keysize 2048 -validity 10000
@@ -29,12 +47,6 @@ else
     cd ${path_commands}/../platforms/android/build/outputs/apk/release
 
     jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore ${path_commands}/../delivery/keystore/TorrentFreebox.keystore android-release-unsigned.apk alias_name >> ${path_commands}/../log/build.log
-
-    if [ -f ${path_commands}/../delivery/TorrentFreebox.apk ]
-    then
-        date=`date '+%Y-%m-%d_%H%M%S'`
-        mv -f ${path_commands}/../delivery/TorrentFreebox.apk ${path_commands}/../delivery/TorrentFreebox_${date}.apk
-    fi
 
     mv -f ${path_commands}/../platforms/android/build/outputs/apk/release/android-release-unsigned.apk ${path_commands}/../delivery/TorrentFreebox.apk
 fi

@@ -8,6 +8,10 @@ else
     echo "Please waiting during installation..."
     echo ""
     cd $exec_path/../
+    if [ ! -d log ]
+    then
+        mkdir log
+    fi
     npm install -y >> log/install.log
     echo ""
     echo "Finished"

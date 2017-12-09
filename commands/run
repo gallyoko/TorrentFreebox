@@ -9,6 +9,10 @@ else
     echo ""
     echo "Ctrl+C to cancel"
     cd $exec_path/../
+    if [ ! -d log ]
+    then
+        mkdir log
+    fi
     ionic serve >> log/serve.log
 fi
 

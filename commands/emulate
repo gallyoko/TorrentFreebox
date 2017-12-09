@@ -10,7 +10,11 @@ else
     then
         echo "${1} emulation launched... please waiting"
         echo ""
-        ionic cordova emulate ${1} >> log/emulate.log
+        if [ ! -d log ]
+        then
+            mkdir log
+        fi
+        ionic cordova emulate ${1} -lc >> log/emulate.log
     else
         echo "usage : emulate android|ios"
     fi
