@@ -13,7 +13,6 @@ import { Observable } from 'rxjs/Observable';
 export class DownloadPage {
 
     private shareMode:boolean;
-    private fullDownloads:any = [];
     private downloads:any = [];
     private noDownload:boolean;
     private noFullDownload:boolean;
@@ -31,7 +30,6 @@ export class DownloadPage {
     ionViewDidEnter () {
         this.shareMode = false;
         this.downloads = [];
-        this.fullDownloads = [];
         this.noDownload = false;
         this.noFullDownload = false;
         this.noDownloadMessage = "";
@@ -61,18 +59,15 @@ export class DownloadPage {
     showDownloads() {
         this.freeboxService.getDownloads().then(downloads => {
             if (downloads) {
-                this.fullDownloads = downloads;
-                if (this.fullDownloads.length > 0) {
+                const allDownloadModel:any = downloads;
+                if (allDownloadModel.length > 0) {
                     this.noFullDownload = false;
                 } else {
                     this.noFullDownload = true;
                 }
-                const downloadFilter = (shareMode) => {
-                    return this.fullDownloads.filter((download) =>
-                        download.shareStatus == shareMode
-                    );
-                };
-                this.downloads = downloadFilter(this.shareMode);
+                this.downloads = allDownloadModel.filter((downloadModel) =>
+                    downloadModel.shareStatus == this.shareMode
+                );
                 if (this.downloads.length > 0) {
                     this.noDownload = false;
                 } else {
@@ -162,10 +157,10 @@ export class DownloadPage {
     delete(download) {
         this.commonService.loadingShow('Please wait...');
         this.freeboxService.deleteDownload(download.id).then(deleted => {
+            this.firstLoad = true;
             if (!deleted['success']) {
                 this.commonService.toastShow('Erreur de suppression.');
             }
-            this.commonService.loadingHide();
         });
     }
 
@@ -175,10 +170,10 @@ export class DownloadPage {
             "status": "stopped"
         };
         this.freeboxService.setStatusDownload(download.id, param).then(pause => {
+            this.firstLoad = true;
             if (!pause['success']) {
                 this.commonService.toastShow('Erreur lors de la mise en pause.');
             }
-            this.commonService.loadingHide();
         });
     }
 
@@ -188,10 +183,10 @@ export class DownloadPage {
             "status": "downloading"
         };
         this.freeboxService.setStatusDownload(download.id, param).then(play => {
+            this.firstLoad = true;
             if (!play['success']) {
                 this.commonService.toastShow('Erreur lors de la reprise.');
             }
-            this.commonService.loadingHide();
         });
     }
 

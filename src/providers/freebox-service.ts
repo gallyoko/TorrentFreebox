@@ -232,6 +232,17 @@ export class FreeboxService {
                                     let downloadStatus: boolean = false;
                                     let checkingStatus: boolean = false;
                                     let shareStatus: boolean = false;
+                                    if (entry['rx_pct'] = 10000 || entry['status']=='seeding') {
+                                        shareStatus = true;
+                                        if (entry['tx_rate'] < 1000 ) {
+                                            speed = entry['tx_rate'] + ' o/s';
+                                        } else if (entry['tx_rate'] < 1000000 ) {
+                                            speed = Math.ceil(entry['tx_rate'] / 1000) + ' Ko/s';
+                                        } else {
+                                            speed = Math.ceil(entry['tx_rate'] / 1000000000) + ' Mo/s';
+                                        }
+                                        progress = Math.ceil((entry['tx_pct'] / 100));
+                                    }
                                     if (entry['status']=='downloading') {
                                         downloadStatus = true;
                                         icon = 'pause';
@@ -252,25 +263,28 @@ export class FreeboxService {
                                             speed = Math.ceil(entry['rx_rate'] / 1000000000) + ' Mo/s';
                                         }
                                     } else if (entry['status']=='stopped') {
-                                        downloadStatus = true;
-                                    } else if (entry['status']=='checking') {
-                                        checkingStatus = true;
-                                    } else if (entry['status']=='seeding') {
-                                        shareStatus = true;
-                                        if (entry['tx_rate'] < 1000 ) {
-                                            speed = entry['tx_rate'] + ' o/s';
-                                        } else if (entry['tx_rate'] < 1000000 ) {
-                                            speed = Math.ceil(entry['tx_rate'] / 1000) + ' Ko/s';
+                                        if (shareStatus) {
+                                            icon = 'pause';
                                         } else {
-                                            speed = Math.ceil(entry['tx_rate'] / 1000000000) + ' Mo/s';
+                                            downloadStatus = true;
                                         }
-                                        progress = Math.ceil((entry['tx_pct'] / 100));
+                                    } else if (entry['status']=='checking') {
+                                        if (!shareStatus) {
+                                            downloadStatus = true;
+                                        }
+                                        checkingStatus = true;
                                     } else if (entry['status']=='starting') {
-                                        downloadStatus = true;
+                                        if (!shareStatus) {
+                                            downloadStatus = true;
+                                        }
                                     } else if (entry['status']=='stopping') {
-                                        downloadStatus = true;
+                                        if (!shareStatus) {
+                                            downloadStatus = true;
+                                        }
                                     } else if (entry['status']=='queued') {
-                                        downloadStatus = true;
+                                        if (!shareStatus) {
+                                            downloadStatus = true;
+                                        }
                                     }
                                     let download:any = new DownloadModel(
                                         entry['id'],
