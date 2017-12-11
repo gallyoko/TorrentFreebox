@@ -19,6 +19,10 @@ import { SpinnerDialog } from '@ionic-native/spinner-dialog';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
+import { File } from '@ionic-native/file';
+import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer';
+import { LocalNotifications } from '@ionic-native/local-notifications';
+
 @NgModule({
   declarations: [
       MyApp,
@@ -49,6 +53,9 @@ import { SplashScreen } from '@ionic-native/splash-screen';
       SplashScreen,
       Toast,
       SpinnerDialog,
+      File,
+      FileTransfer,
+      FileTransferObject,
       {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

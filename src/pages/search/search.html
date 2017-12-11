@@ -8,6 +8,24 @@
 
 <ion-content>
   <ion-list>
-
+    <ion-item>
+      <ion-label>Catégorie</ion-label>
+      <ion-select [(ngModel)]="categorySelect">
+        <ion-option *ngFor="let category of categories" value="{{category}}">{{category}}</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label fixed>Titre</ion-label>
+      <ion-input type="text" [(ngModel)]="titleSearch"></ion-input>
+    </ion-item>
+  </ion-list>
+  <button ion-button (click)="search()">Rechercher</button>
+  <ion-list>
+    <ion-list-header>
+      Résultats
+    </ion-list-header>
+    <ion-item *ngFor="let torrent of torrents">
+      <ion-icon name="download" style="margin-right:10px" (click)="download(torrent)"></ion-icon> {{torrent.title}}
+    </ion-item>
   </ion-list>
 </ion-content>

@@ -1,30 +1,62 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import TorrentSearchApi from 'torrent-search-api';
 import { CommonService } from './common-service';
+import { TorrentModel } from '../models/torrent.model';
 import 'rxjs/add/operator/map';
 
 @Injectable()
 export class TorrentService {
-    private routeAuth: any = 'http://mafreebox.freebox.fr/api/v4/login/authorize/';
+    private routeApi: any = 'http://192.168.1.17:8000/';
+    private routeCategories: any;
+    private routeSearch: any;
 
     constructor(public http: HttpClient, public commonService: CommonService) {
-        
+        this.routeCategories = this.routeApi + 'torrent/categories';
+        this.routeSearch = this.routeApi + 'torrent/search';
     }
 
-    search() {
-        const torrentSearch = new TorrentSearchApi();
-        console.log(torrentSearch.getProviders());
-        torrentSearch.enableProvider('Torrent9');
+    getCategories() {
+        return new Promise(resolve => {
+            this.http.get(this.routeCategories)
+                .subscribe(
+                    response => {
+                        resolve(response);
+                    },
+                    err => {
+                        resolve(false);
+                    }
+                );
+        });
+    }
 
-        // Search '1080' in 'Movies' category and limit to 20 results
-        torrentSearch.search('1080', 'Movies', 20)
-            .then(torrents => {
-                console.log(torrents);
-            })
-            .catch(err => {
-                console.log(err);
-            });
+    search(category, title) {
+        return new Promise(resolve => {
+            let request: any = {
+                "category": category,
+                "title": title
+            };
+            let param:any = JSON.stringify(request);
+            this.http.post(this.routeSearch, param)
+                .subscribe(
+                    response => {
+                        let elements:any = response;
+                        let torrents:any = [];
+                        for (let entry of elements) {
+                            let torrent:any = new TorrentModel(
+                                entry['title'],
+                                entry['size'],
+                                entry['url'],
+                                entry['seed']
+                            );
+                            torrents.push(torrent);
+                        }
+                        resolve(torrents);
+                    },
+                    err => {
+                        resolve(false);
+                    }
+                );
+        });
     }
 
 
