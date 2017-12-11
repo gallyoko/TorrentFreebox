@@ -72,9 +72,9 @@ export class DownloadPage {
                     this.noDownload = false;
                 } else {
                     if (this.shareMode) {
-                        this.noDownloadMessage = "Aucun partage en cours.";
+                        this.noDownloadMessage = 'Aucun partage en cours.';
                     } else {
-                        this.noDownloadMessage = "Aucun téléchargement en cours.";
+                        this.noDownloadMessage = 'Aucun téléchargement en cours.';
                     }
                     this.noDownload = true;
                 }
