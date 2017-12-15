@@ -53,7 +53,6 @@ export class SearchPage {
         }, (error) => {
             this.commonService.toastShow('Erreur : impossible de télécharger le fichier');
         });
-        console.log(torrent.url);
     }
 
 }

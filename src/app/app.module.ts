@@ -56,6 +56,7 @@ import { LocalNotifications } from '@ionic-native/local-notifications';
       File,
       FileTransfer,
       FileTransferObject,
+      LocalNotifications,
       {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
