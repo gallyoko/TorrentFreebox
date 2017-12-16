@@ -43,7 +43,7 @@ export class NavigationDetailsPage {
     download(torrent) {
         this.fileTransfer = this.transfer.create();
         let filename: any = torrent.url.replace('http://www.torrents9.pe/get_torrent/','');
-        this.fileTransfer.download(torrent.url, this.file.externalRootDirectory + '/Download/' + filename).then((entry) => {
+        this.fileTransfer.download(torrent.url, this.file.externalDataDirectory + filename).then((entry) => {
             this.localNotifications.schedule({
                 id: 1,
                 text: 'Le fichier téléchargé a été déposé sous '+ entry.toURL(),

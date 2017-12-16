@@ -8,8 +8,11 @@
 
 <ion-content padding>
   <ion-list>
-    <button ion-item *ngFor="let favorite of favorites" (click)="openNavDetailsPage(favorite)" icon-start>
+    <button ion-item *ngFor="let favorite of favorites" (click)="openMenu(favorite)" icon-start>
       {{ favorite }}
     </button>
+    <ion-item *ngIf="noFavorite">
+      Aucun favoris
+    </ion-item>
   </ion-list>
 </ion-content>

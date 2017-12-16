@@ -65,6 +65,22 @@ export class CommonService {
         });
     }
 
+    removeFavorite(favorite) {
+        return this.getFavorites().then(favorites => {
+            let favoritesToSave:any = [];
+            if (favorites) {
+                favoritesToSave = favorites;
+                let indexToDelete:any = favoritesToSave.indexOf(favorite);
+                if (indexToDelete > -1 ) {
+                    favoritesToSave.splice(indexToDelete, 1);
+                }
+            }
+            return this.setFavorites(favoritesToSave).then(setFavorites => {
+                return setFavorites;
+            });
+        });
+    }
+
     checkFavorite(title) {
         return this.getFavorites().then(favorites => {
             if (!favorites) {

@@ -50,6 +50,9 @@ export class DownloadPage {
         this.commonService.loadingShow('Please wait...');
         this.firstLoad = true;
         this.downloads = [];
+        if (this.noFullDownload) {
+            this.showDownloads();
+        }
     }
 
     ionViewDidLeave () {
@@ -62,12 +65,13 @@ export class DownloadPage {
                 const allDownloadModel:any = downloads;
                 if (allDownloadModel.length > 0) {
                     this.noFullDownload = false;
+                    this.downloads = allDownloadModel.filter((downloadModel) =>
+                        downloadModel.shareStatus == this.shareMode
+                    );
                 } else {
+                    this.downloads = [];
                     this.noFullDownload = true;
                 }
-                this.downloads = allDownloadModel.filter((downloadModel) =>
-                    downloadModel.shareStatus == this.shareMode
-                );
                 if (this.downloads.length > 0) {
                     this.noDownload = false;
                 } else {
