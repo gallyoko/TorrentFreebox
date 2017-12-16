@@ -3,14 +3,6 @@
         <ion-title>
             {{ tvShow.title }}
         </ion-title>
-        <ion-buttons right>
-            <button ion-button *ngIf="titleIsFavorite">
-                <ion-icon name="md-star" class="navicon" style="font-size: 30px;"></ion-icon>
-            </button>
-            <button ion-button *ngIf="!titleIsFavorite" (click)="addToFavorite()">
-                <ion-icon name="md-star-outline" class="navicon" style="font-size: 30px;"></ion-icon>
-            </button>
-        </ion-buttons>
     </ion-navbar>
 </ion-header>
 

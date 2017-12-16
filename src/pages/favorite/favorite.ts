@@ -8,38 +8,25 @@ import { LocalNotifications } from '@ionic-native/local-notifications';
 
 @Component({
     templateUrl: 'tv-show.html',
-    providers: [CommonService]
+    providers: [CommonService, TorrentService]
 })
 export class NavigationDetailsFavoritePage {
-    private tvShow:any;
+    private tvShow:any = [];
     private fileTransfer:FileTransferObject = null;
-    private titleIsFavorite:any = false;
 
     constructor(private params: NavParams, private transfer: FileTransfer,
                 private file: File, private localNotifications: LocalNotifications,
-                private commonService: CommonService) {
-        this.tvShow = params.data.tvShow;
-        this.checkTitle();
+                private commonService: CommonService, private torrentService: TorrentService) {
+        this.getTvShow(params.data.title);
     }
 
-    checkTitle() {
-        this.titleIsFavorite = false;
-        this.commonService.checkFavorite(this.tvShow.title).then(exist => {
-            this.titleIsFavorite = exist;
+    getTvShow(title) {
+        this.commonService.loadingShow('Please wait...');
+        this.torrentService.search('series', title).then(tvShows => {
+            this.tvShow = tvShows[0];
+            this.commonService.loadingHide();
         });
     }
-
-    addToFavorite() {
-        this.commonService.setFavorite(this.tvShow.title).then(setFavorite => {
-            if (setFavorite) {
-                this.titleIsFavorite = true;
-                this.commonService.toastShow('Le titre a été ajouté aux favoris.');
-            } else {
-                this.commonService.toastShow("Erreur : impossible d'ajouter le titre aux favoris.");
-            }
-        });
-    }
-
     download(torrent) {
         this.fileTransfer = this.transfer.create();
         let filename: any = torrent.url.replace('http://www.torrents9.pe/get_torrent/','');
@@ -58,13 +45,12 @@ export class NavigationDetailsFavoritePage {
 @Component({
   selector: 'page-favorite',
   templateUrl: 'favorite.html',
-    providers: [CommonService, TorrentService]
+    providers: [CommonService]
 })
 export class FavoritePage {
     private favorites:any = [];
 
-    constructor(public navCtrl: NavController, private commonService: CommonService,
-                private torrentService: TorrentService) {
+    constructor(public navCtrl: NavController, private commonService: CommonService) {
 
     }
 
@@ -82,10 +68,6 @@ export class FavoritePage {
     }
 
     openNavDetailsPage(title) {
-        this.commonService.loadingShow('Please wait...');
-        this.torrentService.search('series', title).then(tvShows => {
-            this.navCtrl.push(NavigationDetailsFavoritePage, { tvShow: tvShows[0] });
-            this.commonService.loadingHide();
-        });
+        this.navCtrl.push(NavigationDetailsFavoritePage, { title: title });
     }
 }
