@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonService } from './common-service';
 import { TorrentModel } from '../models/torrent.model';
+import { TvShowModel } from '../models/tvShow.model';
 import 'rxjs/add/operator/map';
 
 @Injectable()
@@ -40,17 +41,15 @@ export class TorrentService {
                 .subscribe(
                     response => {
                         let elements:any = response;
-                        let torrents:any = [];
+                        let tvShows:any = [];
                         for (let entry of elements) {
-                            let torrent:any = new TorrentModel(
+                            let tvShow:any = new TvShowModel(
                                 entry['title'],
-                                entry['size'],
-                                entry['url'],
-                                entry['seed']
+                                entry['episodes']
                             );
-                            torrents.push(torrent);
+                            tvShows.push(tvShow);
                         }
-                        resolve(torrents);
+                        resolve(tvShows);
                     },
                     err => {
                         resolve(false);

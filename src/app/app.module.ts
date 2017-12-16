@@ -9,8 +9,8 @@ import { MyApp } from './app.component';
 import { ProgressBarComponent } from '../directives/progress-bar/progress-bar';
 
 import { ConfigPage } from '../pages/config/config';
-import { FavoritePage } from '../pages/favorite/favorite';
-import { SearchPage } from '../pages/search/search';
+import { FavoritePage, NavigationDetailsFavoritePage } from '../pages/favorite/favorite';
+import { SearchPage, NavigationDetailsPage } from '../pages/search/search';
 import { DownloadPage } from '../pages/download/download';
 import { TabsPage } from '../pages/tabs/tabs';
 
@@ -29,7 +29,9 @@ import { LocalNotifications } from '@ionic-native/local-notifications';
       ProgressBarComponent,
       ConfigPage,
       FavoritePage,
+      NavigationDetailsFavoritePage,
       SearchPage,
+      NavigationDetailsPage,
       DownloadPage,
       TabsPage,
   ],
@@ -44,7 +46,9 @@ import { LocalNotifications } from '@ionic-native/local-notifications';
       MyApp,
       ConfigPage,
       FavoritePage,
+      NavigationDetailsFavoritePage,
       SearchPage,
+      NavigationDetailsPage,
       DownloadPage,
       TabsPage
   ],

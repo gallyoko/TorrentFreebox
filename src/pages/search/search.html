@@ -8,6 +8,10 @@
 
 <ion-content>
   <ion-list>
+
+  </ion-list>
+
+  <ion-list>
     <ion-item>
       <ion-label>Catégorie</ion-label>
       <ion-select [(ngModel)]="categorySelect">
@@ -24,8 +28,8 @@
     <ion-list-header>
       Résultats
     </ion-list-header>
-    <ion-item *ngFor="let torrent of torrents">
-      <ion-icon name="download" style="margin-right:10px" (click)="download(torrent)"></ion-icon> {{torrent.title}}
-    </ion-item>
+    <button ion-item *ngFor="let tvShow of tvShows" (click)="openNavDetailsPage(tvShow)" icon-start>
+      {{ tvShow.title }}
+    </button>
   </ion-list>
 </ion-content>

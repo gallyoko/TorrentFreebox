@@ -52,6 +52,39 @@ export class CommonService {
         return Promise.resolve(this.storage.remove('tokenSession'));
     }
 
+    setFavorite(favorite) {
+        return this.getFavorites().then(favorites => {
+            let favoritesToSave:any = [];
+            if (favorites) {
+                favoritesToSave = favorites;
+            }
+            favoritesToSave.push(favorite);
+            return this.setFavorites(favoritesToSave).then(setFavorites => {
+                return setFavorites;
+            });
+        });
+    }
+
+    checkFavorite(title) {
+        return this.getFavorites().then(favorites => {
+            if (!favorites) {
+                return false;
+            }
+            if (favorites.indexOf(title) >= 0) {
+                return true;
+            }
+            return false;
+        });
+    }
+
+    setFavorites(favorites) {
+        return Promise.resolve(this.storage.set('favorites', favorites));
+    }
+
+    getFavorites() {
+        return Promise.resolve(this.storage.get('favorites'));
+    }
+
     loadingShow(message) {
         if (this.platform.is('cordova')) {
             this.spinnerDialog.show(null, message);

@@ -1,16 +1,16 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
-import { TorrentService } from '../../providers/torrent-service';
+import { NavParams } from 'ionic-angular';
 import { CommonService } from '../../providers/common-service';
 import { File } from '@ionic-native/file';
 import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer';
 import { LocalNotifications } from '@ionic-native/local-notifications';
 
 @Component({
+    selector: 'page-tv-show',
     templateUrl: 'tv-show.html',
     providers: [CommonService]
 })
-export class NavigationDetailsFavoritePage {
+export class TvShowPage {
     private tvShow:any;
     private fileTransfer:FileTransferObject = null;
     private titleIsFavorite:any = false;
@@ -18,7 +18,7 @@ export class NavigationDetailsFavoritePage {
     constructor(private params: NavParams, private transfer: FileTransfer,
                 private file: File, private localNotifications: LocalNotifications,
                 private commonService: CommonService) {
-        this.tvShow = params.data.tvShow;
+        this.tvShow = this.params.data.tvShow;
         this.checkTitle();
     }
 
@@ -51,41 +51,6 @@ export class NavigationDetailsFavoritePage {
             });
         }, (error) => {
             this.commonService.toastShow('Erreur : impossible de télécharger le fichier');
-        });
-    }
-}
-
-@Component({
-  selector: 'page-favorite',
-  templateUrl: 'favorite.html',
-    providers: [CommonService, TorrentService]
-})
-export class FavoritePage {
-    private favorites:any = [];
-
-    constructor(public navCtrl: NavController, private commonService: CommonService,
-                private torrentService: TorrentService) {
-
-    }
-
-    ionViewDidEnter () {
-        this.showFavorites();
-    }
-
-    showFavorites() {
-        this.favorites = [];
-        this.commonService.getFavorites().then(favorites => {
-            if (favorites) {
-                this.favorites = favorites;
-            }
-        });
-    }
-
-    openNavDetailsPage(title) {
-        this.commonService.loadingShow('Please wait...');
-        this.torrentService.search('series', title).then(tvShows => {
-            this.navCtrl.push(NavigationDetailsFavoritePage, { tvShow: tvShows[0] });
-            this.commonService.loadingHide();
         });
     }
 }

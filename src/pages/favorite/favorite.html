@@ -7,5 +7,9 @@
 </ion-header>
 
 <ion-content padding>
-
+  <ion-list>
+    <button ion-item *ngFor="let favorite of favorites" (click)="openNavDetailsPage(favorite)" icon-start>
+      {{ favorite }}
+    </button>
+  </ion-list>
 </ion-content>

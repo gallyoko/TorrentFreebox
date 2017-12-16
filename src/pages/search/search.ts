@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, NavParams } from 'ionic-angular';
 import { TorrentService } from '../../providers/torrent-service';
 import { CommonService } from '../../providers/common-service';
 import { File } from '@ionic-native/file';
@@ -7,39 +7,38 @@ import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer';
 import { LocalNotifications } from '@ionic-native/local-notifications';
 
 @Component({
-  selector: 'page-search',
-  templateUrl: 'search.html',
-  providers: [TorrentService, CommonService]
+    templateUrl: 'tv-show.html',
+    providers: [CommonService]
 })
-export class SearchPage {
-    private categories: any;
-    private categorySelect: any = 'series';
-    private torrents: any;
+export class NavigationDetailsPage {
+    private tvShow:any;
     private fileTransfer:FileTransferObject = null;
-    private titleSearch: any = '';
+    private titleIsFavorite:any = false;
 
-  constructor(public navCtrl: NavController, private torrentService: TorrentService,
-              private commonService: CommonService, private transfer: FileTransfer,
-              private file: File, private localNotifications: LocalNotifications) {
-  }
+    constructor(private params: NavParams, private transfer: FileTransfer,
+                private file: File, private localNotifications: LocalNotifications,
+                private commonService: CommonService) {
+        this.tvShow = params.data.tvShow;
+        this.checkTitle();
+    }
 
-  ionViewDidEnter () {
-      this.torrents = [];
-      this.titleSearch = '';
-      this.commonService.loadingShow('Please wait...');
-      this.torrentService.getCategories().then(categories => {
-          this.categories = categories;
-          this.commonService.loadingHide();
-      });
-  }
+    checkTitle() {
+        this.titleIsFavorite = false;
+        this.commonService.checkFavorite(this.tvShow.title).then(exist => {
+            this.titleIsFavorite = exist;
+        });
+    }
 
-  search() {
-      this.commonService.loadingShow('Please wait...');
-      this.torrentService.search(this.categorySelect, this.titleSearch).then(torrents => {
-          this.torrents = torrents;
-          this.commonService.loadingHide();
-      });
-  }
+    addToFavorite() {
+        this.commonService.setFavorite(this.tvShow.title).then(setFavorite => {
+            if (setFavorite) {
+                this.titleIsFavorite = true;
+                this.commonService.toastShow('Le titre a été ajouté aux favoris.');
+            } else {
+                this.commonService.toastShow("Erreur : impossible d'ajouter le titre aux favoris.");
+            }
+        });
+    }
 
     download(torrent) {
         this.fileTransfer = this.transfer.create();
@@ -54,5 +53,42 @@ export class SearchPage {
             this.commonService.toastShow('Erreur : impossible de télécharger le fichier');
         });
     }
+}
+
+@Component({
+  selector: 'page-search',
+  templateUrl: 'search.html',
+  providers: [TorrentService, CommonService]
+})
+export class SearchPage {
+    private categories: any;
+    private categorySelect: any = 'series';
+    private tvShows: any = [];
+    private titleSearch: any = '';
+
+  constructor(public navCtrl: NavController, private torrentService: TorrentService,
+              private commonService: CommonService) {
+  }
+
+  ionViewDidEnter () {
+      this.commonService.loadingShow('Please wait...');
+      this.torrentService.getCategories().then(categories => {
+          this.categories = categories;
+          this.commonService.loadingHide();
+      });
+  }
+
+  search() {
+      this.tvShows = [];
+      this.commonService.loadingShow('Please wait...');
+      this.torrentService.search(this.categorySelect, this.titleSearch).then(tvShows => {
+          this.tvShows = tvShows;
+          this.commonService.loadingHide();
+      });
+  }
+
+  openNavDetailsPage(tvShow) {
+    this.navCtrl.push(NavigationDetailsPage, { tvShow: tvShow });
+  }
 
 }
