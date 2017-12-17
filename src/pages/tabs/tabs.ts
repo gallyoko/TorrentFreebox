@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { StatusBar } from '@ionic-native/status-bar';
+import { SplashScreen } from '@ionic-native/splash-screen';
+import { NavController, Platform } from 'ionic-angular';
 import { CommonService } from '../../providers/common-service';
 import { ConfigPage } from '../config/config';
 
@@ -17,15 +19,17 @@ export class TabsPage {
     tab2Root = FavoritePage;
     tab3Root = SearchPage;
 
-    constructor(public navCtrl: NavController, private commonService: CommonService) {
-
-    }
-
-    ionViewDidEnter () {
-        this.commonService.getGranted().then(granted => {
-            if (!granted) {
-                this.navCtrl.setRoot(ConfigPage);
-            }
+    constructor(public navCtrl: NavController, private platform: Platform,
+                private statusBar: StatusBar, private splashScreen: SplashScreen,
+                private commonService: CommonService) {
+        this.platform.ready().then(() => {
+            this.statusBar.styleDefault();
+            this.splashScreen.hide();
+            this.commonService.getGranted().then(granted => {
+                if (!granted) {
+                    this.navCtrl.setRoot(ConfigPage);
+                }
+            });
         });
     }
 }

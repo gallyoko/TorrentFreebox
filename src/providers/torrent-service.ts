@@ -6,7 +6,8 @@ import 'rxjs/add/operator/map';
 
 @Injectable()
 export class TorrentService {
-    private routeApi: any = 'http://192.168.1.17:8000/';
+    private routeApi: any = 'http://fwed.freeboxos.fr:8000/';
+    //private routeApi: any = 'http://192.168.1.17:8000/';
     private routeCategories: any;
     private routeSearch: any;
 

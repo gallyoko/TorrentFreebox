@@ -7,9 +7,8 @@ import 'rxjs/add/operator/map';
 
 @Injectable()
 export class FreeboxService {
-    //private routeApi: any = 'http://mafreebox.freebox.fr/api/v4/';
-    //private routeApi: any = 'http://fwed.freeboxos.fr:9091/api/v4/';
-    private routeApi: any = 'http://192.168.1.17:8000/';
+    private routeApi: any = 'http://fwed.freeboxos.fr:8000/';
+    //private routeApi: any = 'http://192.168.1.17:8000/';
     private appId: any = 'fr.freebox.torrent';
     private routeAuth: any;
     private routeTracking: any;
@@ -245,6 +244,7 @@ export class FreeboxService {
                                     }
                                     if (entry['status']=='downloading') {
                                         downloadStatus = true;
+                                        shareStatus = false;
                                         icon = 'pause';
                                         if (entry['eta'] < 60 ) {
                                             remainingTime = entry['eta'] + ' sec';
