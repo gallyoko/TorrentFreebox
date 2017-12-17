@@ -18,7 +18,7 @@ export class NavigationDetailsFavoritePage {
     constructor(private params: NavParams, private transfer: FileTransfer,
                 private file: File, private localNotifications: LocalNotifications,
                 private commonService: CommonService, private torrentService: TorrentService) {
-        this.title = params.data.title;
+        this.title = this.params.data.title;
         this.getTvShow();
     }
 
@@ -59,6 +59,7 @@ export class FavoritePage {
     }
 
     ionViewDidEnter () {
+        this.noFavorite = false;
         this.showFavorites();
     }
 

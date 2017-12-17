@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonService } from './common-service';
-import { TorrentModel } from '../models/torrent.model';
 import { TvShowModel } from '../models/tvShow.model';
 import 'rxjs/add/operator/map';
 

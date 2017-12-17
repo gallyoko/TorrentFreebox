@@ -18,7 +18,7 @@ export class NavigationDetailsPage {
     constructor(private params: NavParams, private transfer: FileTransfer,
                 private file: File, private localNotifications: LocalNotifications,
                 private commonService: CommonService) {
-        this.tvShow = params.data.tvShow;
+        this.tvShow = this.params.data.tvShow;
         this.checkTitle();
     }
 
