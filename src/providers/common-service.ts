@@ -3,6 +3,7 @@ import { App, NavController, Platform, LoadingController, ToastController } from
 import { Storage } from '@ionic/storage';
 import { SpinnerDialog } from '@ionic-native/spinner-dialog';
 import { Toast } from '@ionic-native/toast';
+import { NativeStorage } from '@ionic-native/native-storage';
 import 'rxjs/add/operator/map';
 
 @Injectable()
@@ -12,44 +13,184 @@ export class CommonService {
 
     constructor(public app: App, public navCtrl: NavController, public storage: Storage, public platform: Platform,
                 public loadingCtrl: LoadingController, public toastCtrl: ToastController,
-                public spinnerDialog: SpinnerDialog, public toast: Toast) {
+                public spinnerDialog: SpinnerDialog, public toast: Toast, private nativeStorage: NativeStorage) {
         
     }
 
     setToken(token) {
-        return Promise.resolve(this.storage.set('token', token));
+        if (this.platform.is('cordova')) {
+            return this.nativeStorage.setItem('token', token)
+                .then(
+                    () => {
+                        return Promise.resolve(true);
+                    },
+                    error => {
+                        return Promise.resolve(false);
+                    }
+                );
+        } else {
+            return Promise.resolve(this.storage.set('token', token));
+        }
     }
 
     getToken() {
-        return Promise.resolve(this.storage.get('token'));
+        if (this.platform.is('cordova')) {
+            return this.nativeStorage.getItem('token')
+                .then(
+                    data => {
+                        return Promise.resolve(data);
+                    },
+                    error => {
+                        return Promise.resolve(false);
+                    }
+                );
+        } else {
+            return Promise.resolve(this.storage.get('token'));
+        }
     }
 
     setTrackId(trackId) {
-        return Promise.resolve(this.storage.set('trackId', trackId));
+        if (this.platform.is('cordova')) {
+            return this.nativeStorage.setItem('trackId', trackId)
+                .then(
+                    () => {
+                        return Promise.resolve(true);
+                    },
+                    error => {
+                        return Promise.resolve(false);
+                    }
+                );
+        } else {
+            return Promise.resolve(this.storage.set('trackId', trackId));
+        }
     }
 
     getTrackId() {
-        return Promise.resolve(this.storage.get('trackId'));
+        if (this.platform.is('cordova')) {
+            return this.nativeStorage.getItem('trackId')
+                .then(
+                    data => {
+                        return Promise.resolve(data);
+                    },
+                    error => {
+                        return Promise.resolve(false);
+                    }
+                );
+        } else {
+            return Promise.resolve(this.storage.get('trackId'));
+        }
     }
 
     setGranted(granted) {
-        return Promise.resolve(this.storage.set('granted', granted));
+        if (this.platform.is('cordova')) {
+            return this.nativeStorage.setItem('granted', granted)
+                .then(
+                    () => {
+                        return Promise.resolve(true);
+                    },
+                    error => {
+                        return Promise.resolve(false);
+                    }
+                );
+        } else {
+            return Promise.resolve(this.storage.set('granted', granted));
+        }
     }
 
     getGranted() {
-        return Promise.resolve(this.storage.get('granted'));
+        if (this.platform.is('cordova')) {
+            return this.nativeStorage.getItem('granted')
+                .then(
+                    data => {
+                        return Promise.resolve(data);
+                    },
+                    error => {
+                        return Promise.resolve(false);
+                    }
+                );
+        } else {
+            return Promise.resolve(this.storage.get('granted'));
+        }
     }
 
     setTokenSession(tokenSession) {
-        return Promise.resolve(this.storage.set('tokenSession', tokenSession));
+        if (this.platform.is('cordova')) {
+            return this.nativeStorage.setItem('tokenSession', tokenSession)
+                .then(
+                    () => {
+                        return Promise.resolve(true);
+                    },
+                    error => {
+                        return Promise.resolve(false);
+                    }
+                );
+        } else {
+            return Promise.resolve(this.storage.set('tokenSession', tokenSession));
+        }
     }
 
     getTokenSession() {
-        return Promise.resolve(this.storage.get('tokenSession'));
+        if (this.platform.is('cordova')) {
+            return this.nativeStorage.getItem('tokenSession')
+                .then(
+                    data => {
+                        return Promise.resolve(data);
+                    },
+                    error => {
+                        return Promise.resolve(false);
+                    }
+                );
+        } else {
+            return Promise.resolve(this.storage.get('tokenSession'));
+        }
     }
 
     removeTokenSession() {
-        return Promise.resolve(this.storage.remove('tokenSession'));
+        if (this.platform.is('cordova')) {
+            return this.nativeStorage.remove('tokenSession')
+                .then(
+                    () => {
+                        return Promise.resolve(true);
+                    },
+                    error => {
+                        return Promise.resolve(false);
+                    }
+                );
+        } else {
+            return Promise.resolve(this.storage.remove('tokenSession'));
+        }
+    }
+
+    setFavorites(favorites) {
+        if (this.platform.is('cordova')) {
+            return this.nativeStorage.setItem('favorites', favorites)
+                .then(
+                    () => {
+                        return Promise.resolve(true);
+                    },
+                    error => {
+                        return Promise.resolve(false);
+                    }
+                );
+        } else {
+            return Promise.resolve(this.storage.set('favorites', favorites));
+        }
+    }
+
+    getFavorites() {
+        if (this.platform.is('cordova')) {
+            return this.nativeStorage.getItem('favorites')
+                .then(
+                    data => {
+                        return Promise.resolve(data);
+                    },
+                    error => {
+                        return Promise.resolve(false);
+                    }
+                );
+        } else {
+            return Promise.resolve(this.storage.get('favorites'));
+        }
     }
 
     setFavorite(favorite) {
@@ -91,14 +232,6 @@ export class CommonService {
             }
             return false;
         });
-    }
-
-    setFavorites(favorites) {
-        return Promise.resolve(this.storage.set('favorites', favorites));
-    }
-
-    getFavorites() {
-        return Promise.resolve(this.storage.get('favorites'));
     }
 
     loadingShow(message) {

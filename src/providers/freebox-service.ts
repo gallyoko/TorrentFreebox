@@ -257,7 +257,11 @@ export class FreeboxService {
                                     if (entry['status']=='downloading' || (entry['rx_bytes']<entry['size'])) {
                                         downloadStatus = true;
                                         shareStatus = false;
-                                        icon = 'pause';
+                                        if (entry['status']=='downloading') {
+                                            icon = 'play';
+                                        } else {
+                                            icon = 'pause';
+                                        }
                                         if (entry['eta'] < 60 ) {
                                             remainingTime = entry['eta'] + ' sec';
                                         } else if (entry['eta'] < 3600 ) {
@@ -274,7 +278,8 @@ export class FreeboxService {
                                         } else {
                                             speed = Math.ceil(entry['rx_rate'] / 1000000000) + ' Mo/s';
                                         }
-                                    } else if (entry['status']=='stopped') {
+                                    }
+                                    if (entry['status']=='stopped') {
                                         if (shareStatus) {
                                             icon = 'pause';
                                         } else {
