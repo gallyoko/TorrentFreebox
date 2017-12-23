@@ -8,10 +8,6 @@
 
 <ion-content>
   <ion-list>
-
-  </ion-list>
-
-  <ion-list>
     <ion-item>
       <ion-label>Catégorie</ion-label>
       <ion-select [(ngModel)]="categorySelect">
@@ -21,15 +17,18 @@
     <ion-item>
       <ion-label fixed>Titre</ion-label>
       <ion-input type="text" [(ngModel)]="titleSearch"></ion-input>
+      <button ion-button color="light" clear icon-only item-end (click)="search()">
+        <ion-icon name='search' is-active="false"></ion-icon>
+      </button>
     </ion-item>
   </ion-list>
-  <button ion-button (click)="search()">Rechercher</button>
+  <br>
   <ion-list>
-    <ion-list-header>
-      Résultats
-    </ion-list-header>
     <button ion-item *ngFor="let tvShow of tvShows" (click)="openNavDetailsPage(tvShow)" icon-start>
       {{ tvShow.title }}
     </button>
+    <ion-item *ngIf="noResult">
+      Aucun résultat
+    </ion-item>
   </ion-list>
 </ion-content>

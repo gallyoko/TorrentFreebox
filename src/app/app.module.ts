@@ -18,10 +18,10 @@ import { Toast } from '@ionic-native/toast';
 import { SpinnerDialog } from '@ionic-native/spinner-dialog';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-
 import { File } from '@ionic-native/file';
 import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer';
 import { LocalNotifications } from '@ionic-native/local-notifications';
+import { FileOpener } from '@ionic-native/file-opener';
 
 @NgModule({
   declarations: [
@@ -61,6 +61,7 @@ import { LocalNotifications } from '@ionic-native/local-notifications';
       FileTransfer,
       FileTransferObject,
       LocalNotifications,
+      FileOpener,
       {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

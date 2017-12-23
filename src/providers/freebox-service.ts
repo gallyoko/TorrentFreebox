@@ -223,15 +223,27 @@ export class FreeboxService {
                             let downloads:any = [];
                             if (response['result'] != undefined) {
                                 for (let entry of response['result']) {
-                                    let size = (entry['size'] / 1000000) + " Mo";
+                                    let size: any = '';
+                                    if (entry['size'] < 1000000 ) {
+                                        size = (entry['size'] / 1000) + " Ko";
+                                    } else if (entry['size'] < 1000000000 ) {
+                                        size = (entry['size'] / 1000000) + " Mo";
+                                    } else {
+                                        size = (entry['size'] / 1000000000) + " Go";
+                                    }
                                     let progress:number = Math.ceil((entry['rx_pct'] / 100));
+                                    if (entry['rx_bytes'] < entry['size']) {
+                                        progress = Math.ceil(((entry['rx_bytes'] / entry['size']) * 100));
+                                    }
                                     let remainingTime:any = '';
                                     let speed:any = '';
                                     let icon: string = 'play';
                                     let downloadStatus: boolean = false;
                                     let checkingStatus: boolean = false;
                                     let shareStatus: boolean = false;
-                                    if (entry['rx_pct'] = 10000 || entry['status']=='seeding') {
+                                    if ((entry['rx_pct'] = 10000
+                                            || entry['status']=='seeding')
+                                            && (entry['rx_bytes']==entry['size'])) {
                                         shareStatus = true;
                                         if (entry['tx_rate'] < 1000 ) {
                                             speed = entry['tx_rate'] + ' o/s';
@@ -242,7 +254,7 @@ export class FreeboxService {
                                         }
                                         progress = Math.ceil((entry['tx_pct'] / 100));
                                     }
-                                    if (entry['status']=='downloading') {
+                                    if (entry['status']=='downloading' || (entry['rx_bytes']<entry['size'])) {
                                         downloadStatus = true;
                                         shareStatus = false;
                                         icon = 'pause';

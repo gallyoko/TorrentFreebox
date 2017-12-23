@@ -22,6 +22,7 @@
         "@angular/platform-browser-dynamic": "5.0.0",
         "@ionic-native/core": "4.3.2",
         "@ionic-native/file": "^4.5.0",
+        "@ionic-native/file-opener": "^4.5.2",
         "@ionic-native/file-transfer": "^4.5.0",
         "@ionic-native/local-notifications": "^4.5.0",
         "@ionic-native/spinner-dialog": "^4.4.2",
@@ -34,6 +35,7 @@
         "cordova-plugin-badge": "^0.8.5",
         "cordova-plugin-device": "^1.1.7",
         "cordova-plugin-file": "^5.0.0",
+        "cordova-plugin-file-opener2": "^2.0.19",
         "cordova-plugin-file-transfer": "^1.7.0",
         "cordova-plugin-ionic-webview": "^1.1.16",
         "cordova-plugin-local-notification": "^0.9.0-beta.1",
@@ -65,7 +67,8 @@
             "ionic-plugin-keyboard": {},
             "cordova-plugin-file": {},
             "cordova-plugin-file-transfer": {},
-            "cordova-plugin-local-notification": {}
+            "cordova-plugin-local-notification": {},
+            "cordova-plugin-file-opener2": {}
         },
         "platforms": [
             "android"
