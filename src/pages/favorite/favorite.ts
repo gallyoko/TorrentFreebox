@@ -2,10 +2,6 @@ import { Component } from '@angular/core';
 import { NavController, NavParams, ActionSheetController, AlertController } from 'ionic-angular';
 import { TorrentService } from '../../providers/torrent-service';
 import { CommonService } from '../../providers/common-service';
-import { File } from '@ionic-native/file';
-import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer';
-import { LocalNotifications } from '@ionic-native/local-notifications';
-import { FileOpener } from '@ionic-native/file-opener';
 
 @Component({
     selector: 'page-favorite',
@@ -113,45 +109,24 @@ export class FavoritePage {
 export class NavigationDetailsFavoritePage {
     private title:any = '';
     private tvShow:any = [];
-    private fileTransfer:FileTransferObject = null;
 
-    constructor(private params: NavParams, private transfer: FileTransfer,
-                private file: File, private localNotifications: LocalNotifications,
-                private commonService: CommonService, private torrentService: TorrentService,
-                private fileOpener: FileOpener) {
+    constructor(private params: NavParams, private commonService: CommonService,
+                private torrentService: TorrentService) {
         this.title = this.params.data.title;
         this.getTvShow();
     }
 
     getTvShow() {
         this.commonService.loadingShow('Please wait...');
-        this.torrentService.search('series', this.title).then(tvShows => {
+        let limit: any = 200;
+        this.torrentService.search('series', this.title, limit).then(tvShows => {
             this.tvShow = tvShows[0];
             this.commonService.loadingHide();
         });
     }
 
     download(torrent) {
-        this.fileTransfer = this.transfer.create();
         let filename: any = torrent.url.replace('http://www.torrents9.pe/get_torrent/','');
-        this.fileTransfer.download(torrent.url, this.file.externalDataDirectory+filename).then((entry) => {
-            this.localNotifications.schedule({
-                id: 1,
-                text: 'Le fichier téléchargé a été déposé sous '+ entry.toURL(),
-                sound: null,
-                led: 'FF0000'
-            });
-            this.localNotifications.on('click', (event, notification, state) => {
-                this.openPathTransfertFile(this.file.externalDataDirectory, filename);
-            });
-        }, (error) => {
-            this.commonService.toastShow('Erreur : impossible de télécharger le fichier');
-        });
-    }
-
-    openPathTransfertFile(path, filename) {
-        this.fileOpener.open(path + filename, 'application/torrent')
-            .then(() => this.commonService.toastShow('Success : ouvrir ' + filename + ' depuis le dossier ' + path))
-            .catch(e => this.commonService.toastShow('Erreur : impossible d\'ouvrir ' + filename + ' depuis le dossier ' + path));
+        this.commonService.downloadUrlFile(torrent.url, filename);
     }
 }

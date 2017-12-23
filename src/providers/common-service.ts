@@ -4,6 +4,10 @@ import { Storage } from '@ionic/storage';
 import { SpinnerDialog } from '@ionic-native/spinner-dialog';
 import { Toast } from '@ionic-native/toast';
 import { NativeStorage } from '@ionic-native/native-storage';
+import { File } from '@ionic-native/file';
+import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer';
+import { LocalNotifications } from '@ionic-native/local-notifications';
+import { FileOpener } from '@ionic-native/file-opener';
 import 'rxjs/add/operator/map';
 
 @Injectable()
@@ -13,7 +17,9 @@ export class CommonService {
 
     constructor(public app: App, public navCtrl: NavController, public storage: Storage, public platform: Platform,
                 public loadingCtrl: LoadingController, public toastCtrl: ToastController,
-                public spinnerDialog: SpinnerDialog, public toast: Toast, private nativeStorage: NativeStorage) {
+                public spinnerDialog: SpinnerDialog, public toast: Toast, private nativeStorage: NativeStorage,
+                private fileTransfer: FileTransfer, private file: File, private localNotifications: LocalNotifications,
+                private fileOpener: FileOpener) {
         
     }
 
@@ -269,6 +275,34 @@ export class CommonService {
             });
             toast.present();
         }
+    }
+
+    downloadUrlFile(url, filename) {
+        if (this.platform.is('cordova')) {
+            const fileTransfer:FileTransferObject = this.fileTransfer.create();
+            let filename: any = url.replace('http://www.torrents9.pe/get_torrent/','');
+            fileTransfer.download(url, this.file.externalDataDirectory + filename).then((entry) => {
+                this.localNotifications.schedule({
+                    id: 1,
+                    text: 'Le fichier téléchargé a été déposé sous '+ entry.toURL(),
+                    sound: null,
+                    led: '#FF0000'
+                });
+                this.localNotifications.on('click', (event, notification, state) => {
+                    this.openPathTransfertFile(this.file.externalDataDirectory, filename);
+                });
+            }, (error) => {
+                this.toastShow('Erreur : impossible de télécharger le fichier');
+            });
+        } else {
+            this.toastShow('fichier <'+filename+'> téléchargé');
+        }
+    }
+
+    openPathTransfertFile(path, filename) {
+        this.fileOpener.open(path + filename, 'application/x-bittorrent')
+            .then(() => this.toastShow('Success : ouvrir ' + filename + ' depuis le dossier ' + path))
+            .catch(e => this.toastShow('Erreur : impossible d\'ouvrir ' + filename + ' depuis le dossier ' + path));
     }
 }
 

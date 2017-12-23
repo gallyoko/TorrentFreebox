@@ -23,10 +23,18 @@
     </ion-item>
   </ion-list>
   <br>
-  <ion-list>
+  <ion-list *ngIf="categorySerie">
     <button ion-item *ngFor="let tvShow of tvShows" (click)="openNavDetailsPage(tvShow)" icon-start>
       {{ tvShow.title }}
     </button>
+    <ion-item *ngIf="noResult">
+      Aucun résultat
+    </ion-item>
+  </ion-list>
+  <ion-list *ngIf="!categorySerie">
+    <ion-item *ngFor="let torrent of tvShows">
+      <ion-icon name="download" class="icon-download" (click)="download(torrent)"></ion-icon> {{torrent.title}}
+    </ion-item>
     <ion-item *ngIf="noResult">
       Aucun résultat
     </ion-item>

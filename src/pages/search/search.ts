@@ -2,10 +2,6 @@ import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { TorrentService } from '../../providers/torrent-service';
 import { CommonService } from '../../providers/common-service';
-import { File } from '@ionic-native/file';
-import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer';
-import { LocalNotifications } from '@ionic-native/local-notifications';
-import { FileOpener } from '@ionic-native/file-opener';
 
 @Component({
   selector: 'page-search',
@@ -15,6 +11,7 @@ import { FileOpener } from '@ionic-native/file-opener';
 export class SearchPage {
     private categories: any;
     private categorySelect: any = 'series';
+    private categorySerie: any = true;
     private tvShows: any = [];
     private noResult: any = false;
     private titleSearch: any = '';
@@ -22,6 +19,7 @@ export class SearchPage {
   constructor(public navCtrl: NavController, private torrentService: TorrentService,
               private commonService: CommonService) {
       this.noResult = false;
+      this.categorySerie = true;
   }
 
   ionViewDidEnter () {
@@ -37,7 +35,14 @@ export class SearchPage {
           this.tvShows = [];
           this.noResult = false;
           this.commonService.loadingShow('Please wait...');
-          this.torrentService.search(this.categorySelect, this.titleSearch).then(tvShows => {
+          let limit: any = 4;
+          if (this.categorySelect=='series') {
+              limit = 200;
+              this.categorySerie = true;
+          } else {
+              this.categorySerie = false;
+          }
+          this.torrentService.search(this.categorySelect, this.titleSearch, limit).then(tvShows => {
               this.tvShows = tvShows;
               if (this.tvShows.length == 0) {
                 this.noResult = true;
@@ -50,23 +55,24 @@ export class SearchPage {
   }
 
   openNavDetailsPage(tvShow) {
-    this.navCtrl.push(NavigationDetailsPage, { tvShow: tvShow });
+    this.navCtrl.push(NavigationDetailsSearchPage, { tvShow: tvShow });
   }
 
+  download(torrent) {
+      let filename: any = torrent.url.replace('http://www.torrents9.pe/get_torrent/','');
+      this.commonService.downloadUrlFile(torrent.url, filename);
+  }
 }
 
 @Component({
     templateUrl: 'tv-show.html',
     providers: [CommonService]
 })
-export class NavigationDetailsPage {
+export class NavigationDetailsSearchPage {
     private tvShow:any;
-    private fileTransfer:FileTransferObject = null;
     private titleIsFavorite:any = false;
 
-    constructor(private params: NavParams, private transfer: FileTransfer,
-                private file: File, private localNotifications: LocalNotifications,
-                private fileOpener: FileOpener, private commonService: CommonService) {
+    constructor(private params: NavParams, private commonService: CommonService) {
         this.tvShow = this.params.data.tvShow;
         this.checkTitle();
     }
@@ -90,26 +96,7 @@ export class NavigationDetailsPage {
     }
 
     download(torrent) {
-        this.fileTransfer = this.transfer.create();
         let filename: any = torrent.url.replace('http://www.torrents9.pe/get_torrent/','');
-        this.fileTransfer.download(torrent.url, this.file.externalDataDirectory + filename).then((entry) => {
-            this.localNotifications.schedule({
-                id: 1,
-                text: 'Le fichier téléchargé a été déposé sous '+ entry.toURL(),
-                sound: null,
-                led: 'FF0000'
-            });
-            this.localNotifications.on('click', (event, notification, state) => {
-                this.openPathTransfertFile(this.file.externalDataDirectory, filename);
-            });
-        }, (error) => {
-            this.commonService.toastShow('Erreur : impossible de télécharger le fichier');
-        });
-    }
-
-    openPathTransfertFile(path, filename) {
-        this.fileOpener.open(path + filename, 'application/torrent')
-            .then(() => this.commonService.toastShow('Success : ouvrir ' + filename + ' depuis le dossier ' + path))
-            .catch(e => this.commonService.toastShow('Erreur : impossible d\'ouvrir ' + filename + ' depuis le dossier ' + path));
+        this.commonService.downloadUrlFile(torrent.url, filename);
     }
 }

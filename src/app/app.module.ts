@@ -10,9 +10,13 @@ import { ProgressBarComponent } from '../directives/progress-bar/progress-bar';
 
 import { ConfigPage } from '../pages/config/config';
 import { FavoritePage, NavigationDetailsFavoritePage } from '../pages/favorite/favorite';
-import { SearchPage, NavigationDetailsPage } from '../pages/search/search';
+import { SearchPage, NavigationDetailsSearchPage } from '../pages/search/search';
 import { DownloadPage } from '../pages/download/download';
 import { TabsPage } from '../pages/tabs/tabs';
+
+import { CommonService } from '../providers/common-service';
+import { FreeboxService } from '../providers/freebox-service';
+import { TorrentService } from '../providers/torrent-service';
 
 import { Toast } from '@ionic-native/toast';
 import { SpinnerDialog } from '@ionic-native/spinner-dialog';
@@ -32,7 +36,7 @@ import { NativeStorage } from '@ionic-native/native-storage';
       FavoritePage,
       NavigationDetailsFavoritePage,
       SearchPage,
-      NavigationDetailsPage,
+      NavigationDetailsSearchPage,
       DownloadPage,
       TabsPage,
   ],
@@ -49,7 +53,7 @@ import { NativeStorage } from '@ionic-native/native-storage';
       FavoritePage,
       NavigationDetailsFavoritePage,
       SearchPage,
-      NavigationDetailsPage,
+      NavigationDetailsSearchPage,
       DownloadPage,
       TabsPage
   ],
@@ -64,6 +68,9 @@ import { NativeStorage } from '@ionic-native/native-storage';
       LocalNotifications,
       FileOpener,
       NativeStorage,
+      CommonService,
+      FreeboxService,
+      TorrentService,
       {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
