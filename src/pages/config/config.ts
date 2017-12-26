@@ -1,10 +1,6 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
-import { ISubscription } from 'rxjs/Subscription';
 import { FreeboxService } from '../../providers/freebox-service';
 import { CommonService } from '../../providers/common-service';
-import { TabsPage } from '../tabs/tabs';
-import { Observable } from 'rxjs/Rx';
 
 @Component({
     selector: 'page-config',
@@ -12,47 +8,76 @@ import { Observable } from 'rxjs/Rx';
     providers: [CommonService, FreeboxService]
 })
 export class ConfigPage {
+    private downloadDirectory: any;
+    private nbDownload: any;
+    private server: any;
+    private port: any;
+    private username: any;
+    private password: any;
+    private nbConnexion: any;
+    private autoRepair: any;
+    private autoExtract: any;
 
-  private authMessage:string;
-  private subscriptionTimer:ISubscription;
+    constructor(public commonService: CommonService, public freeboxService: FreeboxService) {    }
 
-  constructor(private navCtrl: NavController, public commonService: CommonService,
-              public freeboxService: FreeboxService) {
-      this.authMessage = "";
-  }
+    ionViewDidEnter () {
+        this.downloadDirectory = '';
+        this.nbDownload = '2';
+        this.server = '';
+        this.port = '119';
+        this.username = '';
+        this.password = '';
+        this.nbConnexion = '10';
+        this.autoRepair = false;
+        this.autoExtract = false;
+        this.commonService.getGranted().then(granted => {
+            if (granted) {
+                this.commonService.loadingShow('Please wait...');
+                this.freeboxService.getDownloadConfig().then(config => {
+                    if (config['success']) {
+                        this.setField(config['result']);
+                    }
+                    this.commonService.loadingHide();
+                });
+            }
+        });
+    }
 
-  authentification () {
-      this.authMessage = "";
-      this.commonService.loadingShow("Demande en cours...");
-      this.freeboxService.auth().then(auth => {
-          this.commonService.loadingHide();
-          if (auth) {
-              this.commonService.loadingShow("Veuillez autoriser l'application depuis la Freebox");
-              this.subscriptionTimer = Observable.interval(2500).subscribe(x => {
-                  this.checkStatus();
-              });
-          } else {
-              this.authMessage = "Erreur d'authentification.";
-          }
-      });
-  }
+    setField(data) {
+        this.downloadDirectory = data['download_dir'];
+        this.nbDownload = data['max_downloading_tasks'];
+        this.server = data['news']['server'];
+        this.port = data['news']['port'];
+        this.username = data['news']['user'];
+        this.password = data['news']['password'];
+        this.nbConnexion = data['news']['nthreads'];
+        this.autoRepair = data['news']['auto_repair'];
+        this.autoExtract = data['news']['auto_extract'];
+    }
 
-  ionViewDidLeave () {
-      this.subscriptionTimer.unsubscribe ();
-  }
-
-  checkStatus () {
-      this.freeboxService.getStatus().then(status => {
-          if (status=='granted') {
-              this.commonService.toastShow("Autorisation effectuée.");
-              this.commonService.loadingHide();
-              this.subscriptionTimer.unsubscribe ();
-              this.navCtrl.setRoot(TabsPage);
-          } else if (status!='pending') {
-              this.subscriptionTimer.unsubscribe ();
-              this.commonService.loadingHide();
-              this.commonService.toastShow("Erreur d'autorisation.");
-          }
-      });
-  }
+    save() {
+        this.commonService.getGranted().then(granted => {
+            if (granted) {
+                this.commonService.loadingShow('Please wait...');
+                const parameters = {
+                    "max_downloading_tasks": this.nbDownload,
+                    "download_dir": this.downloadDirectory,
+                    "news": {
+                        "user": this.username,
+                        "port": this.port,
+                        "nthreads": this.nbConnexion,
+                        "auto_repair": this.autoRepair,
+                        "auto_extract": this.autoExtract,
+                        "server": this.server
+                    }
+                };
+                this.freeboxService.updateDownloadConfig(parameters).then(update => {
+                    if (update['success']) {
+                        this.setField(update['result']);
+                    }
+                    this.commonService.loadingHide();
+                });
+            }
+        });
+    }
 }

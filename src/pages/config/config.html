@@ -1,35 +1,58 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-navbar>
     <ion-title>
-      Authentification Freebox
+      Configuration Freebox
     </ion-title>
-    <ion-buttons start>
+    <ion-buttons right>
+      <button ion-button (click)="save()">
+        <ion-icon name="md-done-all" class="navicon" style="font-size: 30px;" ></ion-icon>
+      </button>
     </ion-buttons>
-  </ion-toolbar>
+  </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  <ion-grid>
-    <ion-row>
-      <ion-col col-12>
-        L'application n'est pas authentifiée sur votre Freebox.
-        Pour ce faire, veuillez cliquer sur le bouton ci-dessous et valider la demande sur l'écran LCD de votre Freebox en touchant la flêche droite.
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col col-2></ion-col>
-      <ion-col col-8>
-        <button ion-button (click)="authentification()">
-          demander l'authentification
-        </button>
-      </ion-col>
-      <ion-col col-2></ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col col-12>
-        {{ authMessage }}
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-
+  <ion-list>
+    <ion-list-header>Général</ion-list-header>
+    <ion-item>
+      <ion-label fixed>Dossier de téléchargement</ion-label>
+      <ion-input type="text" [(ngModel)]="downloadDirectory"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label fixed>Nb téléchargement cumulé</ion-label>
+      <ion-input type="text" [(ngModel)]="nbDownload"></ion-input>
+    </ion-item>
+  </ion-list>
+  <br>
+  <ion-list>
+    <ion-list-header>NewsGroups</ion-list-header>
+    <ion-item>
+      <ion-label fixed>Serveur url</ion-label>
+      <ion-input type="text" [(ngModel)]="server"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label fixed>Port</ion-label>
+      <ion-input type="text" [(ngModel)]="port"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label fixed>Nom utilisateur</ion-label>
+      <ion-input type="text" [(ngModel)]="username"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label fixed>Mot de passe</ion-label>
+      <ion-input type="password" [(ngModel)]="password"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Nombre de connexion</ion-label>
+      <ion-input type="text" [(ngModel)]="nbConnexion"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Réparation auto</ion-label>
+      <ion-toggle color="danger" [(ngModel)]="autoRepair"></ion-toggle>
+    </ion-item>
+    <ion-item>
+      <ion-label>Extraction auto</ion-label>
+      <ion-toggle color="danger" [(ngModel)]="autoExtract"></ion-toggle>
+    </ion-item>
+  </ion-list>
 </ion-content>

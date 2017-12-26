@@ -19,6 +19,8 @@ export class FreeboxService {
     private routeDownloadDelete: any;
     private routeDownloadStatus: any;
     private routeDownloadAddByUrl: any;
+    private routeDownloadGetConfig: any;
+    private routeDownloadUpdateConfig: any;
 
     constructor(public http: HttpClient, public commonService: CommonService) {
         //this.routeAuth = this.routeApi + 'login/authorize/';
@@ -34,6 +36,8 @@ export class FreeboxService {
         this.routeDownloadDelete = this.routeApi + 'freebox/download/delete';
         this.routeDownloadStatus = this.routeApi + 'freebox/download/status';
         this.routeDownloadAddByUrl = this.routeApi + 'freebox/download/add/url';
+        this.routeDownloadGetConfig = this.routeApi + 'freebox/newzgroup/get/config';
+        this.routeDownloadUpdateConfig = this.routeApi + 'freebox/newzgroup/update/config';
         //this.routeDownloads = this.routeApi + 'downloads/';
         //this.routeAirMedia = this.routeApi + 'airmedia/receivers/';
     }
@@ -490,6 +494,113 @@ export class FreeboxService {
             };
             let param:any = JSON.stringify(request);
             this.http.post(this.routeDownloadAddByUrl, param)
+                .subscribe(
+                    response => {
+                        resolve(response);
+                    },
+                    err => {
+                        resolve({'success': false});
+                    }
+                );
+        });
+    }
+
+    getDownloadConfig() {
+        return new Promise(resolve => {
+            this.commonService.getTokenSession().then(tokenSession => {
+                if (tokenSession) {
+                    this.getDownloadConfigGranted(tokenSession).then(config => {
+                        if (!config['success']) {
+                            this.challenge().then(tokenSession => {
+                                if (tokenSession) {
+                                    this.getDownloadConfigGranted(tokenSession).then(config => {
+                                        resolve(config);
+                                    });
+                                } else {
+                                    resolve({'success': false});
+                                }
+                            });
+                        } else {
+                            resolve(config);
+                        }
+                    });
+                } else {
+                    this.challenge().then(tokenSession => {
+                        if (tokenSession) {
+                            this.getDownloadConfigGranted(tokenSession).then(config => {
+                                resolve(config);
+                            });
+                        } else {
+                            resolve({'success': false});
+                        }
+                    });
+                }
+            });
+
+        });
+    }
+
+    getDownloadConfigGranted(tokenSession) {
+        return new Promise(resolve => {
+            let request: any = {
+                "token_session": tokenSession.toString()
+            };
+            let param:any = JSON.stringify(request);
+            this.http.post(this.routeDownloadGetConfig, param)
+                .subscribe(
+                    response => {
+                        resolve(response);
+                    },
+                    err => {
+                        resolve({'success': false});
+                    }
+                );
+        });
+    }
+
+    updateDownloadConfig(parameters) {
+        return new Promise(resolve => {
+            this.commonService.getTokenSession().then(tokenSession => {
+                if (tokenSession) {
+                    this.updateDownloadConfigGranted(tokenSession, parameters).then(config => {
+                        if (!config['success']) {
+                            this.challenge().then(tokenSession => {
+                                if (tokenSession) {
+                                    this.updateDownloadConfigGranted(tokenSession, parameters).then(config => {
+                                        resolve(config);
+                                    });
+                                } else {
+                                    resolve({'success': false});
+                                }
+                            });
+                        } else {
+                            resolve(config);
+                        }
+                    });
+                } else {
+                    this.challenge().then(tokenSession => {
+                        if (tokenSession) {
+                            this.updateDownloadConfigGranted(tokenSession, parameters).then(config => {
+                                resolve(config);
+                            });
+                        } else {
+                            resolve({'success': false});
+                        }
+                    });
+                }
+            });
+
+        });
+    }
+
+    updateDownloadConfigGranted(tokenSession, parameters) {
+        return new Promise(resolve => {
+            let request: any = {
+                "token_session": tokenSession.toString(),
+                "param" : parameters
+            };
+            let param:any = JSON.stringify(request);
+            this.http.post(this.routeDownloadUpdateConfig, param)
                 .subscribe(
                     response => {
                         resolve(response);

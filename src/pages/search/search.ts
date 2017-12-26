@@ -51,6 +51,36 @@ export class SearchPage {
           });
       } else {
           this.commonService.toastShow('Veuillez saisir votre recherche.');
+          /*this.databaseService.createNewsgroupDatabase().then(create => {
+              if (create) {
+                  this.databaseService.dropTableCategory().then(drop => {
+                      this.databaseService.createTableCategory().then(createTable => {
+                          if (createTable) {
+                              this.databaseService.insertTableCategory().then(insert => {
+                                  if (insert) {
+                                      this.databaseService.getDataset('category').then(dataset => {
+                                          if (dataset) {
+                                              console.log(dataset[0].name);
+                                              this.databaseService.dropTableBinary().then(dropBinary => {
+                                                  this.databaseService.createTableBinary().then(createBinary => {
+                                                      if (createBinary) {
+                                                          this.commonService.toastShow('SUCCESS : database créée');
+                                                      } else {
+                                                          console.log('ERROR : createBinary');
+                                                      }
+                                                  });
+                                              });
+                                          }
+                                      });
+                                  }
+                              });
+                          }
+                      });
+                  });
+              } else {
+                  this.commonService.toastShow('ERREUR : database non créée');
+              }
+          });*/
       }
   }
 
