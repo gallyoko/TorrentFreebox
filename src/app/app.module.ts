@@ -19,6 +19,7 @@ import { CommonService } from '../providers/common-service';
 import { FreeboxService } from '../providers/freebox-service';
 import { TorrentService } from '../providers/torrent-service';
 import { NewzService } from '../providers/newz-service';
+import { NzbService } from '../providers/nzb-service';
 import { DatabaseService } from '../providers/database-service';
 
 import { Toast } from '@ionic-native/toast';
@@ -83,6 +84,7 @@ import { SQLite } from '@ionic-native/sqlite';
       FreeboxService,
       TorrentService,
       NewzService,
+      NzbService,
       DatabaseService,
       {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]

@@ -27,7 +27,28 @@
     <br>
     <ion-list>
         <ion-item *ngFor="let nzb of result">
-            <ion-icon name="download" class="icon-download" (click)="download(nzb)"></ion-icon> {{nzb.title}}
+            <ion-grid>
+                <ion-row>
+                    <ion-col col-1 class="item-icon" (click)="download(nzb)">
+                        <ion-icon name="download"></ion-icon>
+                    </ion-col>
+                    <ion-col col-11>
+                        <ion-row>
+                            <ion-col col-12>
+                                <span nowrap>{{nzb.title}}</span>
+                            </ion-col>
+                        </ion-row>
+                        <ion-row>
+                            <ion-col col-6>
+                                <h3>{{nzb.sizeElement}}</h3>
+                            </ion-col>
+                            <ion-col col-6>
+                                <h3>{{nzb.pubDate | date: 'dd/MM/yyyy'}}</h3>
+                            </ion-col>
+                        </ion-row>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
         </ion-item>
         <ion-item *ngIf="noResult">
             Aucun résultat

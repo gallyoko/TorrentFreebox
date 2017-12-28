@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { TorrentService } from '../../providers/torrent-service';
+import { NzbService } from '../../providers/nzb-service';
 import { DatabaseService } from '../../providers/database-service';
 import { CommonService } from '../../providers/common-service';
 
@@ -156,24 +157,41 @@ export class NavigationDetailsSearchPage {
 
 @Component({
     templateUrl: 'newz.html',
-    providers: [CommonService]
+    providers: [CommonService, NzbService]
 })
 export class NavigationDetailsNewzPage {
     private tvShow:any;
     private noResult:any;
     private result:any;
 
-    constructor(private params: NavParams, private commonService: CommonService) {
+    constructor(private params: NavParams, private commonService: CommonService,
+                private nzbService: NzbService) {
         this.tvShow = this.params.data.tvShow;
         this.result = [];
         this.noResult = false;
     }
 
     checkNzb () {
-        this.commonService.toastShow('La recherche NZB arrive prochainement.');
+        this.commonService.loadingShow('Please wait...');
+        this.result = [];
+        this.noResult = false;
+        this.nzbService.getNzbs(this.tvShow.filename).then(nzb => {
+            if (nzb) {
+                let nzbs: any = nzb;
+                if (nzbs.length > 0) {
+                    this.result = nzbs;
+                } else {
+                    this.noResult = true;
+                }
+            } else {
+                this.commonService.toastShow("Erreur : impossible de récupérer les NZBs.");
+            }
+            this.commonService.loadingHide();
+        });
     }
 
     download (nzb) {
-        this.commonService.toastShow('Le téléchargement NZB arrive prochainement.');
+        let filename: any = this.tvShow.title + '.nzb';
+        this.commonService.downloadUrlFile(nzb.url, filename);
     }
 }

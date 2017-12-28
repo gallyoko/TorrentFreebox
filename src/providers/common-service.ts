@@ -328,7 +328,6 @@ export class CommonService {
     downloadUrlFile(url, filename) {
         if (this.platform.is('cordova')) {
             const fileTransfer:FileTransferObject = this.fileTransfer.create();
-            let filename: any = url.replace('http://www.torrents9.pe/get_torrent/','');
             fileTransfer.download(url, this.file.externalDataDirectory + filename).then((entry) => {
                 this.localNotifications.schedule({
                     id: 1,
