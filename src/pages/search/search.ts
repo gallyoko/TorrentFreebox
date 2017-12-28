@@ -172,4 +172,8 @@ export class NavigationDetailsNewzPage {
     checkNzb () {
         this.commonService.toastShow('La recherche NZB arrive prochainement.');
     }
+
+    download (nzb) {
+        this.commonService.toastShow('Le téléchargement NZB arrive prochainement.');
+    }
 }

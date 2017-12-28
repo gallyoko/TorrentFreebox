@@ -21,7 +21,16 @@
             Date du post : {{tvShow.pubDate | date: 'dd/MM/yyyy'}}
         </ion-item>
         <ion-item>
-            <button ion-button full color="secondary" (click)="checkNzb()">check Nzb</button>
+            <button ion-button full color="secondary" (click)="checkNzb()">Check NZB</button>
+        </ion-item>
+    </ion-list>
+    <br>
+    <ion-list>
+        <ion-item *ngFor="let nzb of result">
+            <ion-icon name="download" class="icon-download" (click)="download(nzb)"></ion-icon> {{nzb.title}}
+        </ion-item>
+        <ion-item *ngIf="noResult">
+            Aucun résultat
         </ion-item>
     </ion-list>
 </ion-content>
