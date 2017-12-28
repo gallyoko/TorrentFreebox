@@ -107,6 +107,10 @@ export class SearchPage {
     this.navCtrl.push(NavigationDetailsSearchPage, { tvShow: tvShow });
   }
 
+  openNavDetailsNewzPage(tvShow) {
+    this.navCtrl.push(NavigationDetailsNewzPage, { tvShow: tvShow });
+  }
+
   download(torrent) {
       let filename: any = torrent.url.replace('http://www.torrents9.pe/get_torrent/','');
       this.commonService.downloadUrlFile(torrent.url, filename);
@@ -147,5 +151,25 @@ export class NavigationDetailsSearchPage {
     download(torrent) {
         let filename: any = torrent.url.replace('http://www.torrents9.pe/get_torrent/','');
         this.commonService.downloadUrlFile(torrent.url, filename);
+    }
+}
+
+@Component({
+    templateUrl: 'newz.html',
+    providers: [CommonService]
+})
+export class NavigationDetailsNewzPage {
+    private tvShow:any;
+    private noResult:any;
+    private result:any;
+
+    constructor(private params: NavParams, private commonService: CommonService) {
+        this.tvShow = this.params.data.tvShow;
+        this.result = [];
+        this.noResult = false;
+    }
+
+    checkNzb () {
+        this.commonService.toastShow('La recherche NZB arrive prochainement.');
     }
 }

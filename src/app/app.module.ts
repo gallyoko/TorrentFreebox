@@ -11,7 +11,7 @@ import { ProgressBarComponent } from '../directives/progress-bar/progress-bar';
 import { AuthenticationPage } from '../pages/authentication/authentication';
 import { ConfigPage, NavigationNewsPage } from '../pages/config/config';
 import { FavoritePage, NavigationDetailsFavoritePage } from '../pages/favorite/favorite';
-import { SearchPage, NavigationDetailsSearchPage } from '../pages/search/search';
+import { SearchPage, NavigationDetailsSearchPage, NavigationDetailsNewzPage } from '../pages/search/search';
 import { DownloadPage } from '../pages/download/download';
 import { TabsPage } from '../pages/tabs/tabs';
 
@@ -43,6 +43,7 @@ import { SQLite } from '@ionic-native/sqlite';
       NavigationDetailsFavoritePage,
       SearchPage,
       NavigationDetailsSearchPage,
+      NavigationDetailsNewzPage,
       DownloadPage,
       TabsPage,
   ],
@@ -62,6 +63,7 @@ import { SQLite } from '@ionic-native/sqlite';
       NavigationDetailsFavoritePage,
       SearchPage,
       NavigationDetailsSearchPage,
+      NavigationDetailsNewzPage,
       DownloadPage,
       TabsPage
   ],

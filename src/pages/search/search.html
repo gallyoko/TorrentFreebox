@@ -53,7 +53,7 @@
   </div>
   <div *ngIf="!torrentMode">
     <ion-list>
-      <button ion-item *ngFor="let tvShow of tvShows" icon-start>
+      <button ion-item *ngFor="let tvShow of tvShows" (click)="openNavDetailsNewzPage(tvShow)" icon-start>
         {{ tvShow.title }}
       </button>
       <ion-item *ngIf="noResult">
