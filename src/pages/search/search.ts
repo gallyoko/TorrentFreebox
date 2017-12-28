@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { TorrentService } from '../../providers/torrent-service';
+import { DatabaseService } from '../../providers/database-service';
 import { CommonService } from '../../providers/common-service';
 
 @Component({
   selector: 'page-search',
   templateUrl: 'search.html',
-  providers: [TorrentService, CommonService]
+  providers: [TorrentService, CommonService, DatabaseService]
 })
 export class SearchPage {
     private categories: any;
@@ -15,72 +16,90 @@ export class SearchPage {
     private tvShows: any = [];
     private noResult: any = false;
     private titleSearch: any = '';
+    private torrentMode: any = true;
 
   constructor(public navCtrl: NavController, private torrentService: TorrentService,
-              private commonService: CommonService) {
+              private commonService: CommonService, private databaseService: DatabaseService) {
       this.noResult = false;
       this.categorySerie = true;
+      this.torrentMode = true;
   }
 
   ionViewDidEnter () {
       this.commonService.loadingShow('Please wait...');
-      this.torrentService.getCategories().then(categories => {
-          this.categories = categories;
-          this.commonService.loadingHide();
-      });
+      this.loadCategories();
   }
 
-  search() {
-      if (this.titleSearch.trim() != '') {
-          this.tvShows = [];
-          this.noResult = false;
-          this.commonService.loadingShow('Please wait...');
-          let limit: any = 4;
-          if (this.categorySelect=='series') {
-              limit = 200;
-              this.categorySerie = true;
-          } else {
-              this.categorySerie = false;
-          }
-          this.torrentService.search(this.categorySelect, this.titleSearch, limit).then(tvShows => {
-              this.tvShows = tvShows;
-              if (this.tvShows.length == 0) {
-                this.noResult = true;
+  onChangeMode() {
+      this.commonService.loadingShow('Please wait...');
+      this.tvShows = [];
+      if (this.torrentMode) {
+          this.loadCategories();
+      } else {
+          this.commonService.getBddCreate().then(bddCreate => {
+              if (bddCreate) {
+                  this.databaseService.openBdd().then(() => {
+                      this.loadCategories();
+                  });
               }
+          });
+      }
+  }
+
+  loadCategories() {
+      if (this.torrentMode) {
+          this.torrentService.getCategories().then(categories => {
+              this.categories = categories;
               this.commonService.loadingHide();
           });
       } else {
-          this.commonService.toastShow('Veuillez saisir votre recherche.');
-          /*this.databaseService.createNewsgroupDatabase().then(create => {
-              if (create) {
-                  this.databaseService.dropTableCategory().then(drop => {
-                      this.databaseService.createTableCategory().then(createTable => {
-                          if (createTable) {
-                              this.databaseService.insertTableCategory().then(insert => {
-                                  if (insert) {
-                                      this.databaseService.getDataset('category').then(dataset => {
-                                          if (dataset) {
-                                              console.log(dataset[0].name);
-                                              this.databaseService.dropTableBinary().then(dropBinary => {
-                                                  this.databaseService.createTableBinary().then(createBinary => {
-                                                      if (createBinary) {
-                                                          this.commonService.toastShow('SUCCESS : database créée');
-                                                      } else {
-                                                          console.log('ERROR : createBinary');
-                                                      }
-                                                  });
-                                              });
-                                          }
-                                      });
-                                  }
-                              });
-                          }
-                      });
-                  });
+          this.databaseService.getCategories().then(categories => {
+              this.categories = categories;
+              this.commonService.loadingHide();
+          });
+      }
+  }
+
+  search() {
+      if (this.torrentMode) {
+          if (this.titleSearch.trim() != '') {
+              this.tvShows = [];
+              this.noResult = false;
+              this.commonService.loadingShow('Please wait...');
+              let limit: any = 4;
+              if (this.categorySelect=='series') {
+                  limit = 200;
+                  this.categorySerie = true;
               } else {
-                  this.commonService.toastShow('ERREUR : database non créée');
+                  this.categorySerie = false;
               }
-          });*/
+              this.torrentService.search(this.categorySelect, this.titleSearch, limit).then(tvShows => {
+                  this.tvShows = tvShows;
+                  if (this.tvShows.length == 0) {
+                      this.noResult = true;
+                  }
+                  this.commonService.loadingHide();
+              });
+          } else {
+              this.commonService.toastShow('Veuillez saisir votre recherche.');
+          }
+      } else {
+          if (this.categorySelect) {
+              this.tvShows = [];
+              this.noResult = false;
+              this.commonService.loadingShow('Please wait...');
+              this.databaseService.getBinariesByCategory(this.categorySelect).then(dataset => {
+                  if (dataset) {
+                      this.tvShows = dataset;
+                      if (this.tvShows.length == 0) {
+                          this.noResult = true;
+                      }
+                      this.commonService.loadingHide();
+                  }
+              });
+          } else {
+              this.commonService.toastShow('Veuillez sélectionner une catégorie.');
+          }
       }
   }
 

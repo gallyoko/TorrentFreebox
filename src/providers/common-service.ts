@@ -167,6 +167,54 @@ export class CommonService {
         }
     }
 
+    setBddCreate(bddCreate) {
+        if (this.platform.is('cordova')) {
+            return this.nativeStorage.setItem('bddCreate', bddCreate)
+                .then(
+                    () => {
+                        return Promise.resolve(true);
+                    },
+                    error => {
+                        return Promise.resolve(false);
+                    }
+                );
+        } else {
+            return Promise.resolve(this.storage.set('bddCreate', bddCreate));
+        }
+    }
+
+    getBddCreate() {
+        if (this.platform.is('cordova')) {
+            return this.nativeStorage.getItem('bddCreate')
+                .then(
+                    data => {
+                        return Promise.resolve(data);
+                    },
+                    error => {
+                        return Promise.resolve(false);
+                    }
+                );
+        } else {
+            return Promise.resolve(this.storage.get('bddCreate'));
+        }
+    }
+
+    removeBddCreate() {
+        if (this.platform.is('cordova')) {
+            return this.nativeStorage.remove('bddCreate')
+                .then(
+                    data => {
+                        return Promise.resolve(data);
+                    },
+                    error => {
+                        return Promise.resolve(false);
+                    }
+                );
+        } else {
+            return Promise.resolve(this.storage.remove('bddCreate'));
+        }
+    }
+
     setFavorites(favorites) {
         if (this.platform.is('cordova')) {
             return this.nativeStorage.setItem('favorites', favorites)

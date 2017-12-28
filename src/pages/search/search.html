@@ -1,20 +1,30 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>
-      Recherche
-    </ion-title>
+    <ion-title *ngIf="torrentMode">Recherche Torrent</ion-title>
+    <ion-title *ngIf="!torrentMode">Recherche Nzb</ion-title>
+    <ion-buttons right>
+      <ion-toggle color="danger" [(ngModel)]="torrentMode" (ngModelChange)="onChangeMode()"></ion-toggle>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
   <ion-list>
-    <ion-item>
+    <ion-item *ngIf="torrentMode">
       <ion-label>Catégorie</ion-label>
       <ion-select [(ngModel)]="categorySelect">
         <ion-option *ngFor="let category of categories" value="{{category}}">{{category}}</ion-option>
       </ion-select>
     </ion-item>
-    <ion-item>
+    <ion-item *ngIf="!torrentMode"><ion-label>Catégorie</ion-label>
+      <ion-select [(ngModel)]="categorySelect">
+        <ion-option *ngFor="let category of categories" value="{{category.id}}">{{category.name}}</ion-option>
+      </ion-select>
+      <button ion-button color="light" clear icon-only item-end (click)="search()">
+        <ion-icon name='search' is-active="false"></ion-icon>
+      </button>
+    </ion-item>
+    <ion-item *ngIf="torrentMode">
       <ion-label fixed>Titre</ion-label>
       <ion-input type="text" [(ngModel)]="titleSearch"></ion-input>
       <button ion-button color="light" clear icon-only item-end (click)="search()">
@@ -23,20 +33,32 @@
     </ion-item>
   </ion-list>
   <br>
-  <ion-list *ngIf="categorySerie">
-    <button ion-item *ngFor="let tvShow of tvShows" (click)="openNavDetailsPage(tvShow)" icon-start>
-      {{ tvShow.title }}
-    </button>
-    <ion-item *ngIf="noResult">
-      Aucun résultat
-    </ion-item>
-  </ion-list>
-  <ion-list *ngIf="!categorySerie">
-    <ion-item *ngFor="let torrent of tvShows">
-      <ion-icon name="download" class="icon-download" (click)="download(torrent)"></ion-icon> {{torrent.title}}
-    </ion-item>
-    <ion-item *ngIf="noResult">
-      Aucun résultat
-    </ion-item>
-  </ion-list>
+  <div *ngIf="torrentMode">
+    <ion-list *ngIf="categorySerie">
+      <button ion-item *ngFor="let tvShow of tvShows" (click)="openNavDetailsPage(tvShow)" icon-start>
+        {{ tvShow.title }}
+      </button>
+      <ion-item *ngIf="noResult">
+        Aucun résultat
+      </ion-item>
+    </ion-list>
+    <ion-list *ngIf="!categorySerie">
+      <ion-item *ngFor="let torrent of tvShows">
+        <ion-icon name="download" class="icon-download" (click)="download(torrent)"></ion-icon> {{torrent.title}}
+      </ion-item>
+      <ion-item *ngIf="noResult">
+        Aucun résultat
+      </ion-item>
+    </ion-list>
+  </div>
+  <div *ngIf="!torrentMode">
+    <ion-list>
+      <button ion-item *ngFor="let tvShow of tvShows" icon-start>
+        {{ tvShow.title }}
+      </button>
+      <ion-item *ngIf="noResult">
+        Aucun résultat
+      </ion-item>
+    </ion-list>
+  </div>
 </ion-content>

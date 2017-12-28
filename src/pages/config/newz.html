@@ -1,0 +1,32 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>
+            Newzgroup
+        </ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+    <ion-list>
+        <ion-item>
+            <ion-label>Catégorie</ion-label>
+            <ion-select [(ngModel)]="categorySelect">
+                <ion-option *ngFor="let category of categories" value="{{category.id}}">{{category.name}}</ion-option>
+            </ion-select>
+            <button ion-button color="light" clear icon-only item-end (click)="search()">
+                <ion-icon name='search' is-active="false"></ion-icon>
+            </button>
+        </ion-item>
+    </ion-list>
+    <ion-list>
+        <ion-item *ngIf="resultShow">
+            {{resultUpdate}}
+        </ion-item>
+        <ion-item *ngIf="resultShow">
+            {{resultFullCategory}}
+        </ion-item>
+        <ion-item *ngIf="resultShow">
+            {{resultFull}}
+        </ion-item>
+    </ion-list>
+</ion-content>
