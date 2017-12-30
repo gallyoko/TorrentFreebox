@@ -469,6 +469,7 @@ export class FreeboxService {
                     });
                 } else {
                     this.challenge().then(tokenSession => {
+                        console.log(tokenSession);
                         if (tokenSession) {
                             this.addDownloadByUrlGranted(url, downloadDirectory, tokenSession).then(add => {
                                 resolve(add);

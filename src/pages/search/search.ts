@@ -3,6 +3,7 @@ import { NavController, NavParams } from 'ionic-angular';
 import { TorrentService } from '../../providers/torrent-service';
 import { NzbService } from '../../providers/nzb-service';
 import { DatabaseService } from '../../providers/database-service';
+import { FreeboxService } from '../../providers/freebox-service';
 import { CommonService } from '../../providers/common-service';
 
 @Component({
@@ -75,6 +76,8 @@ export class SearchPage {
                   this.categorySerie = false;
               }
               this.torrentService.search(this.categorySelect, this.titleSearch, limit).then(tvShows => {
+                  console.log('tvShows => ');
+                  console.log(tvShows);
                   this.tvShows = tvShows;
                   if (this.tvShows.length == 0) {
                       this.noResult = true;
@@ -157,7 +160,7 @@ export class NavigationDetailsSearchPage {
 
 @Component({
     templateUrl: 'newz.html',
-    providers: [CommonService, NzbService]
+    providers: [CommonService, NzbService, FreeboxService]
 })
 export class NavigationDetailsNewzPage {
     private tvShow:any;
@@ -165,7 +168,7 @@ export class NavigationDetailsNewzPage {
     private result:any;
 
     constructor(private params: NavParams, private commonService: CommonService,
-                private nzbService: NzbService) {
+                private nzbService: NzbService, private freeboxService: FreeboxService) {
         this.tvShow = this.params.data.tvShow;
         this.result = [];
         this.noResult = false;
@@ -191,7 +194,20 @@ export class NavigationDetailsNewzPage {
     }
 
     download (nzb) {
-        let filename: any = this.tvShow.title + '.nzb';
-        this.commonService.downloadUrlFile(nzb.url, filename);
+        this.commonService.loadingShow('Please wait...');
+        this.freeboxService.addDownloadByUrl(nzb.url, 'L0Rpc3F1ZSBkdXIvVMOpbMOpY2hhcmdlbWVudHMv').then(response => {
+            if (response) {
+                let data: any = response;
+                if (data.success) {
+                    this.commonService.toastShow("Le téléchargement a été ajouté..");
+                } else {
+                    console.log(JSON.stringify(data));
+                    this.commonService.toastShow("Erreur : impossible d'ajouter le NZB à la freebox.");
+                }
+            } else {
+                this.commonService.toastShow("Erreur interne : impossible d'ajouter le NZB à la freebox.");
+            }
+            this.commonService.loadingHide();
+        });
     }
 }
